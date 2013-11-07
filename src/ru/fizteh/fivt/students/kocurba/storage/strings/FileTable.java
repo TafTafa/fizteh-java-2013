@@ -74,12 +74,13 @@ public class FileTable implements Table {
 
 		for (int i = 0; i < rawData.length;) {
 			int keyLength = rawData[i++];
+			int valueLength = rawData[i++];
+
 			byte[] rawKey = new byte[keyLength];
 			for (int j = 0; j < keyLength; ++j) {
 				rawKey[j] = rawData[i++];
 			}
 
-			int valueLength = rawData[i++];
 			byte[] rawValue = new byte[valueLength];
 			for (int j = 0; j < valueLength; ++j) {
 				rawValue[j] = rawData[i++];
@@ -101,11 +102,11 @@ public class FileTable implements Table {
 				byte[] length = new byte[1];
 				length[0] = (byte) entry.getKey().length();
 				Files.write(path, length, StandardOpenOption.APPEND);
-				Files.write(path, entry.getKey().getBytes(),
-						StandardOpenOption.APPEND);
-
 				length[0] = (byte) entry.getValue().length();
 				Files.write(path, length, StandardOpenOption.APPEND);
+
+				Files.write(path, entry.getKey().getBytes(),
+						StandardOpenOption.APPEND);
 				Files.write(path, entry.getValue().getBytes(),
 						StandardOpenOption.APPEND);
 			}
