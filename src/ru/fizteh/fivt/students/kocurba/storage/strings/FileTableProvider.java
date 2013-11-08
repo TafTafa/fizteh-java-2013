@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 
 import ru.fizteh.fivt.storage.strings.Table;
 import ru.fizteh.fivt.storage.strings.TableProvider;
+import ru.fizteh.fivt.students.kocurba.storage.utils.StorageFileNameGenerator;
 
 public class FileTableProvider implements TableProvider {
 
@@ -18,36 +19,12 @@ public class FileTableProvider implements TableProvider {
 		}
 	}
 
-	public String getFileName(String tableName) {
-		String filename = this.dir;
-		if (!Files.isDirectory(Paths.get(filename))) {
-			return null;
-		}
-		filename += String.valueOf(tableName.hashCode() % 16) + ".dir/";
-		if (Files.exists(Paths.get(filename))
-				&& !Files.isDirectory(Paths.get(filename))) {
-			return null;
-		}
-		if (!Files.exists(Paths.get(filename))) {
-			try {
-				Files.createDirectory(Paths.get(filename));
-			} catch (IOException e) {
-				return null;
-			}
-		}
-		filename += String.valueOf(tableName.hashCode() / 16 % 16) + ".dat";
-		if (Files.isDirectory(Paths.get(filename))) {
-			return null;
-		}
-		return filename;
-	}
-
 	@Override
 	public Table getTable(String name) {
 		if (name == null || name.isEmpty()) {
 			throw new IllegalArgumentException();
 		}
-		String filename = getFileName(name);
+		String filename = StorageFileNameGenerator.getFileName(this.dir, name);
 		if (filename == null) {
 			throw new IllegalArgumentException();
 		}
@@ -62,7 +39,7 @@ public class FileTableProvider implements TableProvider {
 		if (name == null || name.isEmpty()) {
 			throw new IllegalArgumentException();
 		}
-		String filename = getFileName(name);
+		String filename = StorageFileNameGenerator.getFileName(this.dir, name);
 		if (filename == null) {
 			throw new IllegalArgumentException();
 		}
@@ -78,7 +55,8 @@ public class FileTableProvider implements TableProvider {
 			throw new IllegalArgumentException();
 		}
 		try {
-			String filename = getFileName(name);
+			String filename = StorageFileNameGenerator.getFileName(this.dir,
+					name);
 			if (filename == null || !Files.exists(Paths.get(filename))) {
 				throw new IllegalArgumentException();
 			}

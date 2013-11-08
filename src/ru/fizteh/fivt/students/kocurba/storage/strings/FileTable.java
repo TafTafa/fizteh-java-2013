@@ -99,9 +99,9 @@ public class FileTable implements Table {
 			Files.write(path, new byte[0], StandardOpenOption.CREATE);
 			for (Map.Entry<String, String> entry : this.data.entrySet()) {
 				byte[] length = new byte[1];
-				length[0] = (byte) entry.getKey().length();
+				length[0] = (byte) entry.getKey().getBytes().length;
 				Files.write(path, length, StandardOpenOption.APPEND);
-				length[0] = (byte) entry.getValue().length();
+				length[0] = (byte) entry.getValue().getBytes().length;
 				Files.write(path, length, StandardOpenOption.APPEND);
 
 				Files.write(path, entry.getKey().getBytes(),
