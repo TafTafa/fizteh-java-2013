@@ -17,6 +17,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		TableProviderFactory tableProviderFactory = new FileTableProviderFactory();
+		if (System.getProperty("fizteh.db.dir") == null) {
+			System.exit(-1);
+		}
 		ShellState<State> state = new ShellState<State>(
 				new State(tableProviderFactory.create(System
 						.getProperty("fizteh.db.dir")), null));
