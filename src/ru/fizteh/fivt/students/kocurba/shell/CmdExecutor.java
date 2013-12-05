@@ -17,7 +17,7 @@ public class CmdExecutor<T> {
 
 	}
 
-	public void execute(ShellState<T> state, String[] arguments)
+	public void execute(StateWrap<T> state, String[] arguments)
 			throws IOException {
 		if (arguments.length != (commandHashMap.get(arguments[0]).getArgCount() + 1)) {
 			throw new IOException(commandHashMap.get(arguments[0])

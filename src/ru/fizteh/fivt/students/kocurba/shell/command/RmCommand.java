@@ -3,7 +3,7 @@ package ru.fizteh.fivt.students.kocurba.shell.command;
 import java.io.File;
 import java.io.IOException;
 
-import ru.fizteh.fivt.students.kocurba.shell.ShellState;
+import ru.fizteh.fivt.students.kocurba.shell.StateWrap;
 
 public class RmCommand implements Command<File> {
 
@@ -17,8 +17,8 @@ public class RmCommand implements Command<File> {
 		return "rm";
 	}
 
-	private void recursiveRm(File folder) throws IOException { // toRemove,
-																// toDelete
+	private void recursiveRm(File folder) throws IOException {
+
 		if (folder.isDirectory()) {
 			File[] files = folder.listFiles();
 			for (File f : files) {
@@ -33,7 +33,7 @@ public class RmCommand implements Command<File> {
 	}
 
 	@Override
-	public void executeCommand(ShellState<File> state, String[] arguments)
+	public void executeCommand(StateWrap<File> state, String[] arguments)
 			throws IOException {
 
 		File file = new File(state.getState().getAbsolutePath() + "/"

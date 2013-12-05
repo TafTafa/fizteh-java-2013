@@ -1,9 +1,9 @@
 package ru.fizteh.fivt.students.kocurba.shell;
 
-public class ShellState<T> {
+public class StateWrap<T> {
 	private T state;
 
-	public ShellState(T dataBase) {
+	public StateWrap(T dataBase) {
 		state = dataBase;
 	}
 

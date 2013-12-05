@@ -101,13 +101,11 @@ public class FileTable implements Table {
 				byte[] length = new byte[1];
 				length[0] = (byte) entry.getKey().length();
 				Files.write(path, length, StandardOpenOption.APPEND);
-				Files.write(path, entry.getKey().getBytes(),
-						StandardOpenOption.APPEND);
+				Files.write(path, entry.getKey().getBytes(), StandardOpenOption.APPEND);
 
 				length[0] = (byte) entry.getValue().length();
 				Files.write(path, length, StandardOpenOption.APPEND);
-				Files.write(path, entry.getValue().getBytes(),
-						StandardOpenOption.APPEND);
+				Files.write(path, entry.getValue().getBytes(), StandardOpenOption.APPEND);
 			}
 		} catch (IOException exception) {
 		}

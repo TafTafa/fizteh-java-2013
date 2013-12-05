@@ -3,7 +3,7 @@ package ru.fizteh.fivt.students.kocurba.shell.command;
 import java.io.File;
 import java.io.IOException;
 
-import ru.fizteh.fivt.students.kocurba.shell.ShellState;
+import ru.fizteh.fivt.students.kocurba.shell.StateWrap;
 
 public class PwdCommand implements Command<File> {
 
@@ -18,7 +18,7 @@ public class PwdCommand implements Command<File> {
 	}
 
 	@Override
-	public void executeCommand(ShellState<File> state, String[] arguments)
+	public void executeCommand(StateWrap<File> state, String[] arguments)
 			throws IOException {
 
 		try {

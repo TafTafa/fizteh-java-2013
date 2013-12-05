@@ -7,9 +7,9 @@ import ru.fizteh.fivt.students.kocurba.shell.command.Command;
 
 public class Shell<T> {
 
-	public ShellState<T> state;
+	public StateWrap<T> state;
 
-	public Shell(ShellState<T> startingState) {
+	public Shell(StateWrap<T> startingState) {
 		state = startingState;
 	}
 
@@ -25,7 +25,7 @@ public class Shell<T> {
 
 			try {
 
-				String[] commandArgs = command.split(" ");
+				String[] commandArgs = command.split("\\s+");
 				executor.execute(state, commandArgs);
 
 			} catch (IOException e) {
@@ -57,7 +57,7 @@ public class Shell<T> {
 			command = command.trim();
 
 			try {
-				String[] commandArgs = command.split(" ");
+				String[] commandArgs = command.split("\\s+");
 				executor.execute(state, commandArgs);
 
 			} catch (IOException e) {

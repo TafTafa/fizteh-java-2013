@@ -24,8 +24,7 @@ public class FileTableProvider implements TableProvider {
 			return null;
 		}
 		filename += String.valueOf(tableName.hashCode() % 16) + ".dir/";
-		if (Files.exists(Paths.get(filename))
-				&& !Files.isDirectory(Paths.get(filename))) {
+		if (Files.exists(Paths.get(filename)) && !Files.isDirectory(Paths.get(filename))) {
 			return null;
 		}
 		if (!Files.exists(Paths.get(filename))) {
