@@ -2,7 +2,7 @@ package ru.fizteh.fivt.students.kocurba.multifilehashmap;
 
 import ru.fizteh.fivt.storage.strings.TableProviderFactory;
 import ru.fizteh.fivt.students.kocurba.filemap.command.*;
-import ru.fizteh.fivt.students.kocurba.multifilehashmap.command.CommandList;
+//import ru.fizteh.fivt.students.kocurba.multifilehashmap.command.CommandList;
 import ru.fizteh.fivt.students.kocurba.multifilehashmap.command.CreateCommand;
 import ru.fizteh.fivt.students.kocurba.multifilehashmap.command.DropCommand;
 import ru.fizteh.fivt.students.kocurba.multifilehashmap.command.UseCommand;
