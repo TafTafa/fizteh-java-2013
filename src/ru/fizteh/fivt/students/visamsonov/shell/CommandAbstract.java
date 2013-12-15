@@ -2,16 +2,38 @@ package ru.fizteh.fivt.students.visamsonov.shell;
 
 import java.io.PrintStream;
 
-public abstract class CommandAbstract implements Command {
+public abstract class CommandAbstract<T> implements Command<T> {
 
 	protected String name;
+	private PrintStream errStream;
+	private PrintStream outStream;
 
-	public void printError (String message, PrintStream out) {
-		out.printf("%s: %s\n", name, message);
+	public CommandAbstract (String commandName) {
+		name = commandName;
+		errStream = System.err;
+		outStream = System.out;
+	}
+
+	public CommandAbstract (String commandName, PrintStream out, PrintStream err) {
+		name = commandName;
+		redirectStreams(out, err);
+	}
+
+	public void redirectStreams (PrintStream out, PrintStream err) {
+		errStream = err;
+		outStream = out;
+	}
+
+	public PrintStream getOutStream () {
+		return outStream;
+	}
+
+	public PrintStream getErrStream () {
+		return errStream;
 	}
 
 	public void printError (String message) {
-		printError(message, System.err);
+		errStream.printf("%s: %s\n", name, message);
 	}
 
 	protected String[] splitArguments (String args) {

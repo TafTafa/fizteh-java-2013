@@ -7,12 +7,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-class Launcher {
+public class Launcher {
 
     private HashMap<String, Executable> commands;
+    private StringParser stringParser;
 
-    Launcher(HashMap<String, Executable> commandsMap) {
+    public Launcher(HashMap<String, Executable> commandsMap, StringParser parser) {
         commands = commandsMap;
+        stringParser = parser;
     }
 
     public boolean launch(String[] args, Manager manager) throws IOException {
@@ -48,7 +50,7 @@ class Launcher {
             }
             String[] commandList = commandSet.split(";");
             for (String commandName : commandList) {
-                String[] tokens = commandName.trim().split("[\\s]+");
+                String[] tokens = stringParser.parse(commandName);
 
                 if (tokens.length == 0 || tokens[0].equals("")) {
                     continue;
@@ -60,22 +62,26 @@ class Launcher {
                     manager.printMessage(tokens[0] + ": command not found");
                 } else {
                     Executable command = commands.get(tokens[0]);
-                    if (command.argumentsNumber() != tokens.length) {
+                    int argumentsNumber = command.getArgumentsNumber();
+                    if ((argumentsNumber > 0 && argumentsNumber != tokens.length)
+                            || (argumentsNumber <= 0 && tokens.length < -argumentsNumber)) {
                         manager.printMessage(tokens[0] + ": invalid number of arguments");
                     } else {
                         success = command.execute(tokens);
                     }
                 }
 
-                if (!success && isPackage) {
-                    return false;
-                }
-
                 if (manager.timeToExit()) {
                     return true;
                 }
+
+                if (!success && isPackage) {
+                    manager.setExit();
+                    return false;
+                }
             }
         }
+        manager.setExit();
         return true;
     }
 }

@@ -2,6 +2,8 @@ package ru.fizteh.fivt.students.sterzhanovVladislav.shell;
 
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
@@ -12,20 +14,12 @@ public class Shell {
     public PrintStream err = System.err;
     private Path workingDir;
     
-    static HashMap<String, Command> cmdMap = new HashMap<String, Command>();
-    
-    static {
-        cmdMap.put("cd", new Command.Cd());
-        cmdMap.put("mkdir", new Command.Mkdir());
-        cmdMap.put("pwd", new Command.Pwd());
-        cmdMap.put("rm", new Command.Rm());
-        cmdMap.put("cp", new Command.Cp());
-        cmdMap.put("mv", new Command.Mv());
-        cmdMap.put("dir", new Command.Dir());
-        cmdMap.put("exit", new Command.Exit());
-    }
+    private HashMap<String, Command> cmdMap;
     
     public void execCommandStream(InputStream cmdStream, boolean isInteractiveMode) throws Exception {
+        if (isInteractiveMode) {
+            err = System.out;
+        }
         Scanner cmdReader = new Scanner(cmdStream);
         try {
             maybePrintPrompt(isInteractiveMode);
@@ -35,7 +29,7 @@ public class Shell {
                     for (String cmdString : cmdList) {
                         Command cmd = parseNextCommand(cmdString);
                         if (cmd != null) {
-                            cmd.execute();
+                            cmd.execute(cmd.getParser().parseArgs(cmdString));
                         }
                     }
                 } catch (Exception e) {
@@ -84,13 +78,15 @@ public class Shell {
         if (cmdLine.trim().isEmpty()) {
             return null;
         }
-        String[] tokens = cmdLine.trim().split("[\t ]+");
-        String cmdName = tokens[0];
-        if (!cmdMap.containsKey(cmdName)) {
+        Matcher cmdNameMatcher = Pattern.compile("[\t ]*([^\t ]+)[\t ]*").matcher(cmdLine);
+        String cmdName = null;
+        if (cmdNameMatcher.find()) {
+            cmdName = cmdNameMatcher.group(1);
+        }
+        if (cmdName == null || !cmdMap.containsKey(cmdName)) {
             throw new IllegalArgumentException("Illegal command");
         }
-        Command cmd = cmdMap.get(cmdName).newCommand().setShell(this);
-        cmd.args = tokens;
+        Command cmd = cmdMap.get(cmdName);
         return cmd;
     }
     
@@ -100,7 +96,11 @@ public class Shell {
         }
     }
     
-    Shell() {
+    public Shell(HashMap<String, Command> commandMap) {
+        cmdMap = commandMap;
+        for (Command cmd : cmdMap.values()) {
+            cmd.setShell(this);
+        }
         workingDir = Paths.get(System.getProperty("user.dir"));
     }
 }

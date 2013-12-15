@@ -18,8 +18,8 @@ public class ExitCommand implements Command<File> {
 	}
 
 	@Override
-	public void executeCommand(StateWrap<File> state, String[] arguments)
-			throws IOException {
+	public void executeCommand(StateWrap<File> state, String[] arguments) throws IOException {
+        System.exit(0);
 	}
 
 }

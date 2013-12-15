@@ -3,71 +3,90 @@ package ru.fizteh.fivt.students.elenav.shell;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
-public class ShellState {
-	private File workingDirectory;
-	public void setWorkingDirectory(File f) {
-		workingDirectory = f;
-	}
-	public File getWorkingDirectory() {
-		return workingDirectory;
-	}
-	ShellState() {
-		workingDirectory = new File(".");
-	}
-	
-	static List<AbstractCommand> commands = new ArrayList<AbstractCommand>();
-	public void init() {
-		commands.add(new ChangeDirectoryCommand(this));
-		commands.add(new MakeDirectoryCommand(this));
-		commands.add(new PrintWorkingDirectoryCommand(this));
-		commands.add(new RemoveCommand(this));
-		commands.add(new CopyCommand(this));
-		commands.add(new MoveCommand(this));
-		commands.add(new PrintDirectoryCommand(this));
-		commands.add(new ExitCommand(this));
-	}
-	
-	public void interactive(PrintStream s) {
-		String command = "";
-		final boolean flag = true;
-		do {
-			System.out.print("$ ");
-			Scanner sc = new Scanner(System.in);
-			command = sc.nextLine();
-			command = command.trim();
-			String[] commands = command.split("\\s*;\\s*");
-			for (String c : commands) {
-				try {
-					execute(c, s);
-				}
-				catch (IOException e) {
-					System.err.println(e.getMessage());
-				}
-			}
-		} while (flag);
-	}
-		
-	public void execute(String commandArgLine, PrintStream s) throws IOException {
-		int correctCommand = 0;
-		String[] args = commandArgLine.split("\\s+");
-		int numberArgs = args.length - 1;
-		for (Command c : commands) {
-			if (c.getName().equals(args[0])) {
-				if (c.getArgNumber() == numberArgs) {
-					correctCommand = 1;
-					c.execute(args, s);
-					break;
-				} else {
-					throw new IOException("Invalid number of args");
-				}
-			}
-		}
-		if (correctCommand == 0) {
-			throw new IOException("Invalid command");
-		}		
-	}
+import ru.fizteh.fivt.storage.structured.Storeable;
+import ru.fizteh.fivt.students.elenav.commands.ChangeDirectoryCommand;
+import ru.fizteh.fivt.students.elenav.commands.MakeDirectoryCommand;
+import ru.fizteh.fivt.students.elenav.commands.RmCommand;
+import ru.fizteh.fivt.students.elenav.states.FilesystemState;
+
+public class ShellState extends FilesystemState implements ShellFace {
+    
+    public ShellState(String n, File wd, PrintStream s) {
+        super(n, wd, s);
+    }
+
+    public void changeDirectory(String name) throws IOException {
+        ChangeDirectoryCommand c = new ChangeDirectoryCommand(this);
+        String[] args = {"cd", name};
+        c.execute(args);
+    }
+
+    public void makeDirectory(String name) throws IOException {
+        MakeDirectoryCommand c = new MakeDirectoryCommand(this);
+        String[] args = {"mkdir", name};
+        c.execute(args);
+    }
+
+    public void rm(String name) throws IOException {
+        RmCommand c = new RmCommand(this);
+        String[] args = {"rm", name};
+        c.execute(args);
+    }
+
+    @Override
+    public int commit() {
+        throw new UnsupportedOperationException("Command isn't supported in this implementation");
+    }
+
+    public String get(String string) {
+        System.err.print("Command isn't supported in this implementation");
+        return null;
+    }
+
+    @Override
+    public String getValue(String string) {
+        return get(string);
+    }
+    
+    @Override
+    public String put(String string, String string2) {
+        System.err.print("Command isn't supported in this implementation");
+        return null;
+    }
+
+    public String remove(String string) {
+        throw new UnsupportedOperationException("Command isn't supported in this implementation");
+    }
+    
+    @Override
+    public String removeKey(String string) {
+        return remove(string);
+    }
+
+    @Override
+    public int rollback() {
+        throw new UnsupportedOperationException("Command isn't supported in this implementation");
+    }
+
+    @Override
+    public int size() {
+        throw new UnsupportedOperationException("Command isn't supported in this implementation");
+    }
+
+    @Override
+    public int getNumberOfChanges() {
+        throw new UnsupportedOperationException("Command isn't supported in this implementation");
+    }
+
+    @Override
+    public void read() throws IOException {
+        throw new UnsupportedOperationException("Command isn't supported in this implementation");
+    }
+
+    @Override
+    public Storeable put(String string, Storeable string2) {
+        throw new UnsupportedOperationException("Command isn't supported in this implementation");
+    }
+
 }

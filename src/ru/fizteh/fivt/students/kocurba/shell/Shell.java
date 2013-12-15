@@ -20,25 +20,20 @@ public class Shell<T> {
 		System.out.print("$ ");
 
 		String command = inputScanner.nextLine();
+        try {
 		while (true) {
 			command = command.trim();
-
-			try {
-
-				String[] commandArgs = command.split("\\s+");
-				executor.execute(state, commandArgs);
-
-			} catch (IOException e) {
-				System.err.println(e.getMessage());
-			}
-			if (command.equals("exit")) {
-				inputScanner.close();
-				return;
-			}
+            String[] commandArgs = command.split("\\s+");
+			executor.execute(state, commandArgs);
 			System.out.print("$ ");
 			command = inputScanner.nextLine();
 		}
-
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        finally {
+            inputScanner.close();
+        }
 	}
 
 	public void batchMode(String[] args, Command<T>[] com) {
@@ -62,9 +57,6 @@ public class Shell<T> {
 
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
-				return;
-			}
-			if (command.equals("exit")) {
 				return;
 			}
 

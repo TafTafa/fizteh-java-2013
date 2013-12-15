@@ -23,7 +23,8 @@ public class ExitCommand implements Command<State> {
 		if (state.getState().getCurrentTable() != null) {
 			state.getState().getCurrentTable().commit();
 		}
-		state.setState(null);
+        System.out.println("exit");
+        System.exit(0);
 	}
 
 }

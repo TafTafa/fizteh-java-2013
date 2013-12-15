@@ -1,12 +1,13 @@
-package ru.fizteh.fivt.students.dubovpavel.shell2.Performers;
+package ru.fizteh.fivt.students.dubovpavel.shell2.performers;
 
-import ru.fizteh.fivt.students.dubovpavel.shell2.Command;
-import ru.fizteh.fivt.students.dubovpavel.shell2.Dispatcher;
+import ru.fizteh.fivt.students.dubovpavel.executor.Command;
+import ru.fizteh.fivt.students.dubovpavel.executor.Dispatcher;
+import ru.fizteh.fivt.students.dubovpavel.executor.PerformerException;
 
 import java.io.File;
 
-public class PerformerRemove extends Performer {
-    private class PerformerRemoveException extends Exception {
+public class PerformerRemove extends PerformerShell {
+    public static class PerformerRemoveException extends Exception {
         public PerformerRemoveException(String file) {
             super(file);
         }
@@ -16,32 +17,32 @@ public class PerformerRemove extends Performer {
         return command.getHeader().equals("rm") && command.argumentsCount() == 1;
     }
 
-    private void removeObject(File object) throws PerformerRemoveException {
-        if(object.isDirectory()) {
-            for(File subObject: object.listFiles()) {
-                if(subObject.isDirectory()) {
+    public void removeObject(File object) throws PerformerRemoveException {
+        if (object.isDirectory()) {
+            for (File subObject : object.listFiles()) {
+                if (subObject.isDirectory()) {
                     removeObject(subObject);
-                } else if(subObject.isFile()) {
-                    if(!subObject.delete()) {
+                } else if (subObject.isFile()) {
+                    if (!subObject.delete()) {
                         throw new PerformerRemoveException(subObject.getPath());
                     }
                 }
             }
         }
-        if(!object.delete()) {
+        if (!object.delete()) {
             throw new PerformerRemoveException(object.getPath());
         }
     }
 
     public void execute(Dispatcher dispatcher, Command command) throws PerformerException {
         File object = getCanonicalFile(command.getArgument(0));
-        if(!object.exists()) {
+        if (!object.exists()) {
             throw new PerformerException(dispatcher.callbackWriter(Dispatcher.MessageType.ERROR,
                     String.format("%s. rm: '%s' does not exist", command.getDescription(), object.getPath())));
         }
         try {
             removeObject(object);
-        } catch(PerformerRemoveException e) {
+        } catch (PerformerRemoveException e) {
             throw new PerformerException(dispatcher.callbackWriter(Dispatcher.MessageType.ERROR,
                     String.format("%s. rm: Can not remove '%s'", command.getDescription(), e.getMessage())));
         }

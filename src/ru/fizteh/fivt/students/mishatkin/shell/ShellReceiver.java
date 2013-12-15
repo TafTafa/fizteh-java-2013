@@ -9,11 +9,24 @@ import java.nio.file.Files;
  *
  */
 
-public class ShellReceiver implements CommandReceiver {
+public class ShellReceiver implements CommandReceiver{
+	protected boolean interactiveMode;
+
+	private ShellPrintStream out;
 
 	private File shellPath;
 
 	public ShellReceiver() {
+		this((ShellPrintStream) null, false);
+	}
+
+	public ShellReceiver(PrintStream out, boolean interactiveMode) {
+		this(new ShellPrintStream(out), interactiveMode);
+	}
+
+	public ShellReceiver(ShellPrintStream out, boolean interactiveMode) {
+		this.out = out;
+		this.interactiveMode = interactiveMode;
 		shellPath = new File(".");
 		try {
 			shellPath = shellPath.getCanonicalFile();
@@ -21,23 +34,25 @@ public class ShellReceiver implements CommandReceiver {
 
 		}
 	}
-
-	private void print(String s) {
-		System.out.print(s);
+	public boolean isInteractiveMode() {
+		return interactiveMode;
 	}
 
-	private void println(String s) {
-		System.out.println(s);
+	protected ShellPrintStream getOut() {
+		return out;
 	}
 
-	private String simplePrompt() {
-		return "$";
+	public void print(String s) {
+		out.print(s);
+	}
+
+	public void println(String s) {
+		out.println(s);
 	}
 
 	public void showPrompt() {
-		if (!Shell.isArgumentsMode) {
-			print(simplePrompt() + " ");
-//			System.out.print(shellPath.getAbsolutePath() + " " + simplePrompt() + " ");
+		if (isInteractiveMode()) {
+			print("$ ");
 		}
 	}
 
@@ -53,7 +68,6 @@ public class ShellReceiver implements CommandReceiver {
 		return theFile;
 	}
 
-	@Override
 	public void changeDirectoryCommand(String arg) throws ShellException {
 		//File previousState = new File(shellPath, "");
 		File destinationFile = normalizedFile(arg);
@@ -63,12 +77,10 @@ public class ShellReceiver implements CommandReceiver {
 		shellPath = destinationFile;
 	}
 
-	@Override
 	public void exitCommand() throws TimeToExitException {
 		throw new TimeToExitException();
 	}
 
-	@Override
 	public void directoryCommand() {
 		File[] files = shellPath.listFiles();
 		for (File file : files) {
@@ -76,12 +88,10 @@ public class ShellReceiver implements CommandReceiver {
 		}
 	}
 
-	@Override
 	public void printWorkingDirectoryCommand() {
 		println(shellPath.getAbsolutePath());
 	}
 
-	@Override
 	public void makeDirectoryCommand(String arg) throws ShellException {
 		File directoryToCreate = normalizedFile(arg);
 		if (directoryToCreate.exists()) {
@@ -90,19 +100,31 @@ public class ShellReceiver implements CommandReceiver {
 		directoryToCreate.mkdir();
 	}
 
-	@Override
-	public void removeCommand(String arg) throws ShellException {
+	public void rmCommand(String arg) throws ShellException {
 		File fileToDelete = normalizedFile(arg);
 		deleteFile(fileToDelete);
 	}
 
 	private void deleteFile(File fileToDelete) throws ShellException {
-		if (!fileToDelete.exists() || !fileToDelete.delete()) {
-			throw new ShellException("rm: cannot remove \'" + fileToDelete.getName() + "\': No such file or directory");
+		if (!fileToDelete.exists()) {
+			throw new ShellException("rm: cannot remove \'" + fileToDelete.getName() + "\': No such file or directory.");
+		}
+		File[] subFiles = fileToDelete.listFiles();
+		if (subFiles == null) {
+			if(!fileToDelete.delete()) {
+				throw new ShellException("rm: cannot remove \'" + fileToDelete.getName() + ".");
+			}
+		} else {
+			assert subFiles != null;
+			for (File subFile : subFiles) {
+				deleteFile(subFile);
+			}
+			if(!fileToDelete.delete()) {
+				throw new ShellException("rm: cannot remove \'" + fileToDelete.getName() + ".");
+			}
 		}
 	}
 
-	@Override
 	public void copyCommand(String sourceFileOrDirectoryName, String destinationDirectoryName) throws ShellException {
 		File sourceFileOrDirectory = normalizedFile(sourceFileOrDirectoryName);
 		if (!sourceFileOrDirectory.exists()) {
@@ -111,7 +133,7 @@ public class ShellReceiver implements CommandReceiver {
 		File destinationDirectory = normalizedFile(destinationDirectoryName);
 		File destinationFileOrDirectory = new File(destinationDirectory, sourceFileOrDirectory.getName());
 		if (destinationFileOrDirectory.exists()) {
-			throw new ShellException("cp: \'" + destinationFileOrDirectory.getAbsolutePath() + "\' : Destination directory already exists");
+			throw new ShellException("cp: \'" + destinationFileOrDirectory.getAbsolutePath() + "\' : Destinfation directory already exists");
 		}
 		if (!destinationFileOrDirectory.isDirectory()) {
 			if (destinationDirectory.toPath().equals(sourceFileOrDirectory.toPath())) {
@@ -143,7 +165,6 @@ public class ShellReceiver implements CommandReceiver {
 		}
 	}
 
-	@Override
 	public void moveCommand(String sourceFileOrDirectoryName, String destinationFileOrDirectoryName) throws ShellException {
 		File sourceFileOrDirectory = normalizedFile(sourceFileOrDirectoryName);
 		if (!sourceFileOrDirectory.exists()) {

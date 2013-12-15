@@ -4,31 +4,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 
-public class FileManager implements Manager {
+public class FileManager extends Manager {
 
-    private PrintStream outputStream = System.out;
-    private File currentPath = new File("").getAbsoluteFile();
-    private boolean mustExit = false;
-
-    @Override
-    public boolean timeToExit() {
-        return mustExit;
-    }
-
-    @Override
-    public void printMessage(final String message) {
-        outputStream.println(message);
-    }
+    protected File currentPath = new File("").getAbsoluteFile();
 
     @Override
     public void printSuggestMessage() {
         outputStream.print(currentPath.getName() + File.separator + "$ ");
-    }
-
-    public void setExit() {
-        mustExit = true;
     }
 
     public File getCurrentPath() {
@@ -148,7 +131,7 @@ public class FileManager implements Manager {
         return true;
     }
 
-    boolean safeCopy(File source, File destination, String command) {
+    protected boolean safeCopy(File source, File destination, String command) {
         if (source == null) {
             printMessage(command + ": invalid source path");
         } else if (!source.exists()) {
@@ -165,7 +148,7 @@ public class FileManager implements Manager {
         return false;
     }
 
-    boolean recursiveRemove(File removable, String command) {
+    protected boolean recursiveRemove(File removable, String command) {
         if (removable.isDirectory()) {
             File[] files = removable.listFiles();
             if (files != null) {

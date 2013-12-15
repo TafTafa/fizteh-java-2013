@@ -1,12 +1,11 @@
 package ru.fizteh.fivt.students.kocurba.storage.strings;
 
-import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.io.*;
 
 import ru.fizteh.fivt.storage.strings.Table;
 
@@ -26,7 +25,7 @@ public class FileTable implements Table {
 			try {
 				Files.createFile(Paths.get(filename));
 			} catch (IOException e) {
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException(e);
 			}
 		}
 		this.filename = filename;
@@ -94,25 +93,28 @@ public class FileTable implements Table {
 
 	@Override
 	public int commit() {
-		try {
-			Path path = Paths.get(this.filename);
-			Files.write(path, new byte[0], StandardOpenOption.CREATE);
-			for (Map.Entry<String, String> entry : this.data.entrySet()) {
-				byte[] length = new byte[1];
-				length[0] = (byte) entry.getKey().length();
-				Files.write(path, length, StandardOpenOption.APPEND);
-				Files.write(path, entry.getKey().getBytes(), StandardOpenOption.APPEND);
 
-				length[0] = (byte) entry.getValue().length();
-				Files.write(path, length, StandardOpenOption.APPEND);
-				Files.write(path, entry.getValue().getBytes(), StandardOpenOption.APPEND);
-			}
-		} catch (IOException exception) {
-		}
-		int result = commitSize;
-		commitSize = 0;
-		return result;
-	}
+        try {
+            DataOutputStream outStream = new DataOutputStream(new FileOutputStream(new File(this.filename)));
+
+            for (Map.Entry<String, String> entry : this.data.entrySet()) {
+                int length;
+                length =  entry.getKey().getBytes(StandardCharsets.UTF_8).length;
+                outStream.write(length);
+                outStream.write(entry.getKey().getBytes(StandardCharsets.UTF_8));
+
+                length = entry.getValue().getBytes(StandardCharsets.UTF_8).length;
+                outStream.write(length);
+                outStream.write(entry.getValue().getBytes(StandardCharsets.UTF_8));
+            }
+            outStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        int result = commitSize;
+        commitSize = 0;
+        return result;
+    }
 
 	@Override
 	public String getName() {

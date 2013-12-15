@@ -2,7 +2,6 @@ package ru.fizteh.fivt.students.ichalovaDiana.shell;
 
 import java.util.EnumSet;
 import java.util.Hashtable;
-import java.util.Scanner;
 import java.io.IOException;
 import java.nio.file.FileSystemLoopException;
 import java.nio.file.FileVisitOption;
@@ -17,6 +16,7 @@ import java.nio.file.StandardCopyOption;
 public class Shell {
 
     static Hashtable<String, Command> commands = new Hashtable<String, Command>();
+    static Interpreter interpreter;
     static Path workingDirectory;
 
     static {
@@ -30,62 +30,16 @@ public class Shell {
         commands.put("mv", new Mv());
         commands.put("dir", new Dir());
         commands.put("exit", new Exit());
+
+        interpreter = new Interpreter(commands);
     }
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            runInteractiveMode();
+            interpreter.runInteractiveMode();
         } else {
-            runBatchMode(args);
+            interpreter.runBatchMode(args);
         }
-    }
-
-    private static void runInteractiveMode() {
-        Scanner userInput = new Scanner(System.in);
-        System.out.print("$ ");
-        while (userInput.hasNextLine()) {
-            String input = userInput.nextLine();
-            try {
-                executeCommands(input);
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-            }
-            System.out.print("$ ");
-        }
-        userInput.close();
-    }
-
-    private static void runBatchMode(String[] args) {
-        StringBuilder concatArgs = new StringBuilder();
-        for (String item : args) {
-            concatArgs.append(item).append(" ");
-        }
-        try {
-            executeCommands(concatArgs.toString());
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
-        }
-    }
-
-    private static void executeCommands(String input) throws Exception {
-        String[][] inputCommandsWithParams = parseCommands(input);
-        for (int i = 0; i < inputCommandsWithParams.length; ++i) {
-            Command cmd = commands.get(inputCommandsWithParams[i][0]);
-            if (cmd == null) {
-                throw new Exception("Command not found");
-            }
-            cmd.execute(inputCommandsWithParams[i]);
-        }
-    }
-
-    private static String[][] parseCommands(String inputString) {
-        String[] inputCommands = inputString.split("[\n\t ]*;[\n\t ]*");
-        String[][] inputCommandsWithParams = new String[inputCommands.length][];
-        for (int i = 0; i < inputCommands.length; ++i) {
-            inputCommandsWithParams[i] = inputCommands[i].trim().split("[\n\t ]+");
-        }
-        return inputCommandsWithParams;
     }
 
     static Path getWorkingDirectory() {
@@ -113,15 +67,13 @@ public class Shell {
     }
 }
 
-abstract class Command {
-    abstract void execute(String... arguments) throws Exception;
-}
-
 class Cd extends Command {
     static final int ARG_NUM = 2;
+    public boolean rawArgumentsNeeded = false;
 
     @Override
-    void execute(String... arguments) throws Exception {
+    protected void execute(String... arguments) throws Exception {
+        
         try {
             if (arguments.length != ARG_NUM) {
                 throw new IllegalArgumentException("Illegal number of arguments");
@@ -143,9 +95,10 @@ class Cd extends Command {
 
 class Mkdir extends Command {
     static final int ARG_NUM = 2;
+    public boolean rawArgumentsNeeded = false;
 
     @Override
-    void execute(String... arguments) throws Exception {
+    protected void execute(String... arguments) throws Exception {
         try {
             if (arguments.length != ARG_NUM) {
                 throw new IllegalArgumentException("Illegal number of arguments");
@@ -164,9 +117,10 @@ class Mkdir extends Command {
 
 class Pwd extends Command {
     static final int ARG_NUM = 1;
+    public boolean rawArgumentsNeeded = false;
 
     @Override
-    void execute(String... arguments) throws Exception {
+    protected void execute(String... arguments) throws Exception {
         try {
             if (arguments.length != ARG_NUM) {
                 throw new IllegalArgumentException("Illegal number of arguments");
@@ -181,9 +135,10 @@ class Pwd extends Command {
 
 class Rm extends Command {
     static final int ARG_NUM = 2;
+    public boolean rawArgumentsNeeded = false;
 
     @Override
-    void execute(String... arguments) throws Exception {
+    protected void execute(String... arguments) throws Exception {
         try {
             if (arguments.length != ARG_NUM) {
                 throw new IllegalArgumentException("Illegal number of arguments");
@@ -227,9 +182,10 @@ class Rm extends Command {
 
 class Cp extends Command {
     static final int ARG_NUM = 3;
+    public boolean rawArgumentsNeeded = false;
 
     @Override
-    void execute(String... arguments) throws Exception {
+    protected void execute(String... arguments) throws Exception {
         try {
             if (arguments.length != ARG_NUM) {
                 throw new IllegalArgumentException("Illegal number of arguments");
@@ -292,9 +248,10 @@ class Cp extends Command {
 
 class Mv extends Command {
     static final int ARG_NUM = 3;
+    public boolean rawArgumentsNeeded = false;
 
     @Override
-    void execute(String... arguments) throws Exception {
+    protected void execute(String... arguments) throws Exception {
         try {
             if (arguments.length != ARG_NUM) {
                 throw new IllegalArgumentException("Illegal number of arguments");
@@ -351,9 +308,10 @@ class Mv extends Command {
 
 class Dir extends Command {
     static final int ARG_NUM = 1;
+    public boolean rawArgumentsNeeded = false;
 
     @Override
-    void execute(String... arguments) throws Exception {
+    protected void execute(String... arguments) throws Exception {
         try {
             if (arguments.length != ARG_NUM) {
                 throw new IllegalArgumentException("Illegal number of arguments");
@@ -371,9 +329,10 @@ class Dir extends Command {
 
 class Exit extends Command {
     static final int ARG_NUM = 1;
+    public boolean rawArgumentsNeeded = false;
 
     @Override
-    void execute(String... arguments) throws Exception {
+    protected void execute(String... arguments) throws Exception {
         try {
             if (arguments.length != ARG_NUM) {
                 throw new IllegalArgumentException("Illegal number of arguments");
