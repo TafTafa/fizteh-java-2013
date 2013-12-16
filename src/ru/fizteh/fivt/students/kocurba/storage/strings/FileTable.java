@@ -57,7 +57,7 @@ public class FileTable implements Table {
 		++this.commitSize;
 		return data.remove(key);
 	}
-
+         /*
 	@Override
 	public int rollback() {
 		byte[] rawData;
@@ -90,9 +90,47 @@ public class FileTable implements Table {
 		int result = commitSize;
 		commitSize = 0;
 		return result;
-	}
+	}             */
 
-	@Override
+
+    public int rollback() {
+        DataInputStream inStream;
+        try {
+            inStream = new DataInputStream(new FileInputStream(new File(this.filename)));
+        } catch (IOException e) {
+            e.printStackTrace();
+            int result = commitSize;
+            commitSize = 0;
+            return result;
+        }
+        this.data = new HashMap<String, String>();
+        try {
+        for ( ; ;) {
+            int keyLength = inStream.readInt();
+            int valueLength = inStream.readInt();
+
+            byte[] rawKey = new byte[keyLength];
+            for (int j = 0; j < keyLength; ++j) {
+                rawKey[j] = inStream.readByte();
+            }
+
+            byte[] rawValue = new byte[valueLength];
+            for (int j = 0; j < valueLength; ++j) {
+                rawValue[j] = inStream.readByte();
+            }
+
+            data.put(new String(rawKey), new String(rawValue));
+        }
+        }   catch (EOFException e)  {
+            //do nothing
+        }   catch (IOException e2)  {
+            e2.printStackTrace();
+        }
+        int result = commitSize;
+        commitSize = 0;
+        return result;
+    }
+    @Override
 	public int commit() {
 
         try {
