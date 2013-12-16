@@ -30,8 +30,7 @@ public class Shell<T> {
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
-        }
-        finally {
+        } finally {
             inputScanner.close();
         }
     }
@@ -47,7 +46,7 @@ public class Shell<T> {
         sb.append(args[args.length - 1]);
         sb.append(" ; ");
 
-        String commands[] = sb.toString().split(";");
+        String[] commands = sb.toString().split(";");
         for (String command : commands) {
             command = command.trim();
 
