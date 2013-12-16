@@ -101,10 +101,11 @@ public class FileTable implements Table {
                 int length;
                 length =  entry.getKey().getBytes(StandardCharsets.UTF_8).length;
                 outStream.write(length);
-                outStream.write(entry.getKey().getBytes(StandardCharsets.UTF_8));
 
                 length = entry.getValue().getBytes(StandardCharsets.UTF_8).length;
                 outStream.write(length);
+
+                outStream.write(entry.getKey().getBytes(StandardCharsets.UTF_8));
                 outStream.write(entry.getValue().getBytes(StandardCharsets.UTF_8));
             }
             outStream.close();
