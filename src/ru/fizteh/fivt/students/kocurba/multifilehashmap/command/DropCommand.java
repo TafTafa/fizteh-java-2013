@@ -8,31 +8,31 @@ import ru.fizteh.fivt.students.kocurba.shell.command.Command;
 
 public class DropCommand implements Command<State> {
 
-	@Override
-	public int getArgCount() {
-		return 1;
-	}
+    @Override
+    public int getArgCount() {
+        return 1;
+    }
 
-	@Override
-	public String getCommandName() {
-		return "drop";
-	}
+    @Override
+    public String getCommandName() {
+        return "drop";
+    }
 
-	@Override
-	public void executeCommand(StateWrap<State> state, String[] arguments)
-			throws IOException {
-		if (state.getState().getCurrentTable() != null
-				&& state.getState().getCurrentTable().getName()
-						.equals(arguments[1])) {
-			state.getState().setCurrentTable(null);
-		}
-		try {
-			state.getState().getTableProvider().removeTable(arguments[1]);
-		} catch (IllegalStateException exception) {
-			System.err.println(arguments[1] + " not exists");
-			return;
-		}
-		System.out.println("dropped");
-	}
+    @Override
+    public void executeCommand(StateWrap<State> state, String[] arguments)
+            throws IOException {
+        if (state.getState().getCurrentTable() != null
+                && state.getState().getCurrentTable().getName()
+                        .equals(arguments[1])) {
+            state.getState().setCurrentTable(null);
+        }
+        try {
+            state.getState().getTableProvider().removeTable(arguments[1]);
+        } catch (IllegalStateException exception) {
+            System.err.println(arguments[1] + " not exists");
+            return;
+        }
+        System.out.println("dropped");
+    }
 
 }

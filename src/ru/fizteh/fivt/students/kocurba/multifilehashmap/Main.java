@@ -19,11 +19,11 @@ import ru.fizteh.fivt.students.kocurba.storage.strings.FileTableProviderFactory;
  */
 public class Main {
 
-	public static void main(String[] args) {
-		TableProviderFactory tableProviderFactory = new FileTableProviderFactory();
-		StateWrap<State> state = new StateWrap<State>(new State(tableProviderFactory.create(System
+    public static void main(String[] args) {
+        TableProviderFactory tableProviderFactory = new FileTableProviderFactory();
+        StateWrap<State> state = new StateWrap<State>(new State(tableProviderFactory.create(System
                 .getProperty("fizteh.db.dir")), null));
-		Shell<State> shell = new Shell<State>(state);
+        Shell<State> shell = new Shell<State>(state);
 
 
         Command<State> putCommand = new PutCommand();
@@ -34,15 +34,15 @@ public class Main {
         Command<State> dropCommand = new DropCommand();
         Command<State> useCommand = new UseCommand();
 
-        Command[] commands = { putCommand, getCommand, removeCommand, createCommand, dropCommand, useCommand,
-               exitCommand };
+        Command[] commands = {putCommand, getCommand, removeCommand, createCommand, dropCommand, useCommand,
+                exitCommand};
 
-		if (0 != args.length) {
-			shell.batchMode(args, commands);
-		} else {
-			shell.interactiveMode(commands);
-		}
-		System.exit(0);
-	}
+        if (0 != args.length) {
+            shell.batchMode(args, commands);
+        } else {
+            shell.interactiveMode(commands);
+        }
+        System.exit(0);
+    }
 
 }

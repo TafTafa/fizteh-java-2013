@@ -9,25 +9,25 @@ import ru.fizteh.fivt.students.kocurba.shell.command.Command;
 
 public class CreateCommand implements Command<State> {
 
-	@Override
-	public int getArgCount() {
-		return 1;
-	}
+    @Override
+    public int getArgCount() {
+        return 1;
+    }
 
-	@Override
-	public String getCommandName() {
-		return "create";
-	}
+    @Override
+    public String getCommandName() {
+        return "create";
+    }
 
-	@Override
-	public void executeCommand(StateWrap<State> state, String[] arguments)
-			throws IOException {
-		Table newTable = state.getState().getTableProvider()
-				.createTable(arguments[1]);
-		if (newTable == null) {
-			System.err.println(arguments[1] + " exists");
-			return;
-		}
-		System.out.println("created");
-	}
+    @Override
+    public void executeCommand(StateWrap<State> state, String[] arguments)
+            throws IOException {
+        Table newTable = state.getState().getTableProvider()
+                .createTable(arguments[1]);
+        if (newTable == null) {
+            System.err.println(arguments[1] + " exists");
+            return;
+        }
+        System.out.println("created");
+    }
 }

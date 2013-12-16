@@ -36,6 +36,6 @@ public class Main {
             shell.interactiveMode(commands);
         }
         System.exit(0);
-	}
+    }
 
 }
