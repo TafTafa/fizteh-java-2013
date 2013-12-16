@@ -16,26 +16,26 @@ import ru.fizteh.fivt.students.kocurba.storage.strings.FileTableProviderFactory;
  */
 public class FileTableProviderFactoryTest {
 
-	private TableProviderFactory factory;
+    private TableProviderFactory factory;
 
-	@Before
-	public void initFactory() {
-		factory = new FileTableProviderFactory();
-	}
+    @Before
+    public void initFactory() {
+        factory = new FileTableProviderFactory();
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testNullDirectoryName() {
-		factory.create(null);
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullDirectoryName() {
+        factory.create(null);
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testNonExistingDirectoryName() {
-		factory.create("/non-existing");
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void testNonExistingDirectoryName() {
+        factory.create("/non-existing");
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testIncorrectSymbolsInDirectoryName() {
-		factory.create("/\\");
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void testIncorrectSymbolsInDirectoryName() {
+        factory.create("/\\");
+    }
 
 }

@@ -11,86 +11,86 @@ import ru.fizteh.fivt.storage.strings.Table;
 
 public class FileTable implements Table {
 
-	private String name;
-	private String filename;
-	private Map<String, String> data;
-	private int commitSize;
+    private String name;
+    private String filename;
+    private Map<String, String> data;
+    private int commitSize;
 
-	public FileTable(String name, String filename) {
-		this.name = name;
-		if (filename == null) {
-			throw new IllegalArgumentException();
-		}
-		if (!Files.exists(Paths.get(filename))) {
-			try {
-				Files.createFile(Paths.get(filename));
-			} catch (IOException e) {
-				throw new IllegalArgumentException(e);
-			}
-		}
-		this.filename = filename;
-		rollback();
-	}
+    public FileTable(String name, String filename) {
+        this.name = name;
+        if (filename == null) {
+            throw new IllegalArgumentException();
+        }
+        if (!Files.exists(Paths.get(filename))) {
+            try {
+                Files.createFile(Paths.get(filename));
+            } catch (IOException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+        this.filename = filename;
+        rollback();
+    }
 
-	@Override
-	public String put(String key, String value) {
-		if (key == null || value == null) {
-			throw new IllegalArgumentException();
-		}
-		++this.commitSize;
-		return data.put(key, value);
-	}
+    @Override
+    public String put(String key, String value) {
+        if (key == null || value == null) {
+            throw new IllegalArgumentException();
+        }
+        ++this.commitSize;
+        return data.put(key, value);
+    }
 
-	@Override
-	public String get(String key) {
-		if (key == null) {
-			throw new IllegalArgumentException();
-		}
-		return data.get(key);
-	}
+    @Override
+    public String get(String key) {
+        if (key == null) {
+            throw new IllegalArgumentException();
+        }
+        return data.get(key);
+    }
 
-	@Override
-	public String remove(String key) {
-		if (key == null) {
-			throw new IllegalArgumentException();
-		}
-		++this.commitSize;
-		return data.remove(key);
-	}
+    @Override
+    public String remove(String key) {
+        if (key == null) {
+            throw new IllegalArgumentException();
+        }
+        ++this.commitSize;
+        return data.remove(key);
+    }
          /*
-	@Override
-	public int rollback() {
-		byte[] rawData;
-		try {
-			rawData = Files.readAllBytes(Paths.get(this.filename));
-		} catch (IOException e) {
-			e.printStackTrace();
-			int result = commitSize;
-			commitSize = 0;
-			return result;
-		}
-		this.data = new HashMap<String, String>();
+    @Override
+    public int rollback() {
+        byte[] rawData;
+        try {
+            rawData = Files.readAllBytes(Paths.get(this.filename));
+        } catch (IOException e) {
+            e.printStackTrace();
+            int result = commitSize;
+            commitSize = 0;
+            return result;
+        }
+        this.data = new HashMap<String, String>();
 
-		for (int i = 0; i < rawData.length;) {
-			int keyLength = rawData[i++];
+        for (int i = 0; i < rawData.length;) {
+            int keyLength = rawData[i++];
             int valueLength = rawData[i++];
 
-			byte[] rawKey = new byte[keyLength];
-			for (int j = 0; j < keyLength; ++j) {
-				rawKey[j] = rawData[i++];
-			}
+            byte[] rawKey = new byte[keyLength];
+            for (int j = 0; j < keyLength; ++j) {
+                rawKey[j] = rawData[i++];
+            }
 
-			byte[] rawValue = new byte[valueLength];
-			for (int j = 0; j < valueLength; ++j) {
-				rawValue[j] = rawData[i++];
-			}
+            byte[] rawValue = new byte[valueLength];
+            for (int j = 0; j < valueLength; ++j) {
+                rawValue[j] = rawData[i++];
+            }
 
-			data.put(new String(rawKey), new String(rawValue));
-		}
-		int result = commitSize;
-		commitSize = 0;
-		return result;
-	}             */
+            data.put(new String(rawKey), new String(rawValue));
+        }
+        int result = commitSize;
+        commitSize = 0;
+        return result;
+    }             */
 
 
     public int rollback() {
@@ -105,7 +105,7 @@ public class FileTable implements Table {
         }
         this.data = new HashMap<String, String>();
         try {
-        for ( ; ;) {
+        for (; ; ) {
             int keyLength = inStream.readInt();
             int valueLength = inStream.readInt();
 
@@ -131,7 +131,7 @@ public class FileTable implements Table {
         return result;
     }
     @Override
-	public int commit() {
+    public int commit() {
 
         try {
             DataOutputStream outStream = new DataOutputStream(new FileOutputStream(new File(this.filename)));
@@ -156,14 +156,14 @@ public class FileTable implements Table {
         return result;
     }
 
-	@Override
-	public String getName() {
-		return this.name;
-	}
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
-	@Override
-	public int size() {
-		return this.commitSize;
-	}
+    @Override
+    public int size() {
+        return this.commitSize;
+    }
 
 }
