@@ -7,21 +7,21 @@ import ru.fizteh.fivt.students.kocurba.shell.StateWrap;
 
 public class DirCommand implements Command<File> {
 
-	@Override
-	public int getArgCount() {
-		return 0;
-	}
+    @Override
+    public int getArgCount() {
+        return 0;
+    }
 
-	@Override
-	public String getCommandName() {
-		return "dir";
-	}
+    @Override
+    public String getCommandName() {
+        return "dir";
+    }
 
-	@Override
-	public void executeCommand(StateWrap<File> state, String[] arguments) throws IOException {
+    @Override
+    public void executeCommand(StateWrap<File> state, String[] arguments) throws IOException {
 
-		for (String fl : state.getState().list()) {
-			System.out.println(fl);
-		}
-	}
+        for (String fl : state.getState().list()) {
+            System.out.println(fl);
+        }
+    }
 }
