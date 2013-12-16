@@ -101,10 +101,10 @@ public class FileTable implements Table {
             for (Map.Entry<String, String> entry : this.data.entrySet()) {
                 int length;
                 length =  entry.getKey().getBytes(StandardCharsets.UTF_8).length;
-                outStream.write(length);
+                outStream.writeInt(length);
 
                 length = entry.getValue().getBytes(StandardCharsets.UTF_8).length;
-                outStream.write(length);
+                outStream.writeInt(length);
 
                 outStream.write(entry.getKey().getBytes(StandardCharsets.UTF_8));
                 outStream.write(entry.getValue().getBytes(StandardCharsets.UTF_8));
