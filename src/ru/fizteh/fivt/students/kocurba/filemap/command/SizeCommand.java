@@ -7,24 +7,24 @@ import ru.fizteh.fivt.students.kocurba.shell.command.Command;
 
 public class SizeCommand implements Command<State> {
 
-	@Override
-	public int getArgCount() {
-		return 0;
-	}
+    @Override
+    public int getArgCount() {
+        return 0;
+    }
 
-	@Override
-	public String getCommandName() {
-		return "size";
-	}
+    @Override
+    public String getCommandName() {
+        return "size";
+    }
 
-	@Override
-	public void executeCommand(StateWrap<State> state, String[] arguments)
-			throws IOException {
-		if (state.getState().getCurrentTable() == null) {
-			System.err.println("no table");
-			return;
-		}
-		System.out.println(state.getState().getCurrentTable().size());
-	}
+    @Override
+    public void executeCommand(StateWrap<State> state, String[] arguments)
+            throws IOException {
+        if (state.getState().getCurrentTable() == null) {
+            System.err.println("no table");
+            return;
+        }
+        System.out.println(state.getState().getCurrentTable().size());
+    }
 
 }

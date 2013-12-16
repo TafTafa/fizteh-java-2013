@@ -7,24 +7,24 @@ import ru.fizteh.fivt.students.kocurba.shell.command.Command;
 
 public class CommitCommand implements Command<State> {
 
-	@Override
-	public int getArgCount() {
-		return 0;
-	}
+    @Override
+    public int getArgCount() {
+        return 0;
+    }
 
-	@Override
-	public String getCommandName() {
-		return "commit";
-	}
+    @Override
+    public String getCommandName() {
+        return "commit";
+    }
 
-	@Override
-	public void executeCommand(StateWrap<State> state, String[] arguments)
-			throws IOException {
-		if (state.getState().getCurrentTable() == null) {
-			System.err.println("no table");
-			return;
-		}
-		state.getState().getCurrentTable().commit();
-	}
+    @Override
+    public void executeCommand(StateWrap<State> state, String[] arguments)
+            throws IOException {
+        if (state.getState().getCurrentTable() == null) {
+            System.err.println("no table");
+            return;
+        }
+        state.getState().getCurrentTable().commit();
+    }
 
 }

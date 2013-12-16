@@ -17,25 +17,25 @@ import ru.fizteh.fivt.students.kocurba.storage.strings.FileTable;
  */
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		Table dataBase = new FileTable("db", System.getProperty("fizteh.db.dir") + "/db.dat");
-		StateWrap<State> state = new StateWrap<State>(new State(null, dataBase));
-		Shell<State> shell = new Shell<State>(state);
+    public static void main(String[] args) throws IOException {
+        Table dataBase = new FileTable("db", System.getProperty("fizteh.db.dir") + "/db.dat");
+        StateWrap<State> state = new StateWrap<State>(new State(null, dataBase));
+        Shell<State> shell = new Shell<State>(state);
 
         Command<State> putCommand = new PutCommand();
         Command<State> getCommand = new GetCommand();
         Command<State> removeCommand = new RemoveCommand();
         Command<State> exitCommand = new ExitCommand();
 
-        Command[] commands = { putCommand, getCommand, removeCommand, exitCommand };
+        Command[] commands = {putCommand, getCommand, removeCommand, exitCommand};
 
 
         if (0 != args.length) {
-			shell.batchMode(args, commands);
-		} else {
-			shell.interactiveMode(commands);
-		}
-		System.exit(0);
+            shell.batchMode(args, commands);
+        } else {
+            shell.interactiveMode(commands);
+        }
+        System.exit(0);
 	}
 
 }
