@@ -23,7 +23,8 @@ public class UseCommand implements Command<State> {
     public void executeCommand(StateWrap<State> state, String[] arguments)
             throws IOException {
         if (state.getState().getCurrentTable() != null && state.getState().getCurrentTable().size() > 0) {
-            System.err.println(state.getState().getCurrentTable().size() + " unsaved changes");
+            //System.err.println(state.getState().getCurrentTable().size() + " unsaved changes");
+            state.getState().getCurrentTable().commit();
             return;
         }
 
