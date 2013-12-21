@@ -148,6 +148,12 @@ public class NewFileTable implements Table {
     }
     @Override
     public int commit() {
+        try {
+        Files.delete(Paths.get(filename));
+        Files.createDirectory(Paths.get(filename));
+        } catch (IOException e) {
+            //
+        }
 
         Set<String> keys = data.keySet();
         try {
