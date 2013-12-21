@@ -1,32 +1,31 @@
 package ru.fizteh.fivt.students.kocurba.multifilehashmap.command;
 
-import java.io.IOException;
-
-import ru.fizteh.fivt.storage.strings.Table;
 import ru.fizteh.fivt.students.kocurba.filemap.command.State;
 import ru.fizteh.fivt.students.kocurba.shell.StateWrap;
 import ru.fizteh.fivt.students.kocurba.shell.command.Command;
 
-public class CreateCommand implements Command<State> {
+import java.io.IOException;
+
+public class NewExitCommand implements Command<State> {
 
     @Override
     public int getArgCount() {
-        return 1;
+        return 0;
     }
 
     @Override
     public String getCommandName() {
-        return "create";
+        return "exit";
     }
 
     @Override
     public void executeCommand(StateWrap<State> state, String[] arguments)
             throws IOException {
-        Table newTable = state.getState().getTableProvider().createTable(arguments[1]);
-        if (newTable == null) {
-            System.err.println(arguments[1] + " exists");
-            return;
+        if (state.getState().getCurrentTable() != null) {
+            state.getState().getCurrentTable().commit();
         }
-        System.out.println("created");
+        System.out.println("exit");
+        System.exit(0);
     }
+
 }

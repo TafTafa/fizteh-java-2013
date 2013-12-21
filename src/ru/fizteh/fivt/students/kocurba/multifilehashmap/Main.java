@@ -20,6 +20,7 @@ import ru.fizteh.fivt.students.kocurba.storage.strings.FileTableProviderFactory;
 public class Main {
 
     public static void main(String[] args) {
+
         TableProviderFactory tableProviderFactory = new FileTableProviderFactory();
         StateWrap<State> state = new StateWrap<State>(new State(tableProviderFactory.create(System
                 .getProperty("fizteh.db.dir")), null));

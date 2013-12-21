@@ -121,11 +121,15 @@ public class FileTable implements Table {
         return result;
     }
 
+
     @Override
     public String getName() {
         return this.name;
     }
 
+    public String getFilename() {
+        return this.filename;
+    }
     @Override
     public int size() {
         return this.commitSize;

@@ -21,8 +21,7 @@ public class DropCommand implements Command<State> {
     @Override
     public void executeCommand(StateWrap<State> state, String[] arguments)
             throws IOException {
-        if (state.getState().getCurrentTable() != null
-                && state.getState().getCurrentTable().getName()
+        if (state.getState().getCurrentTable() != null && state.getState().getCurrentTable().getName()
                         .equals(arguments[1])) {
             state.getState().setCurrentTable(null);
         }

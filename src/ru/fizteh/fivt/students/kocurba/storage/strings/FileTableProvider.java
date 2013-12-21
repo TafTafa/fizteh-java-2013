@@ -24,10 +24,12 @@ public class FileTableProvider implements TableProvider {
         if (!Files.isDirectory(Paths.get(filename))) {
             return null;
         }
-        filename += String.valueOf(tableName.hashCode() % 16) + ".dir/";
+        //filename += String.valueOf(tableName.hashCode() % 16) + ".dir/";
+        filename += tableName;
         if (Files.exists(Paths.get(filename)) && !Files.isDirectory(Paths.get(filename))) {
             return null;
         }
+                /*
         if (!Files.exists(Paths.get(filename))) {
             try {
                 Files.createDirectory(Paths.get(filename));
@@ -35,26 +37,29 @@ public class FileTableProvider implements TableProvider {
                 return null;
             }
         }
+
         filename += String.valueOf(tableName.hashCode() / 16 % 16) + ".dat";
         if (Files.isDirectory(Paths.get(filename))) {
             return null;
-        }
+        }  */
         return filename;
     }
 
     @Override
     public Table getTable(String name) {
         if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException();
+            //throw new IllegalArgumentException();
+            System.exit(1);
         }
         String filename = getFileName(name);
         if (filename == null) {
-            throw new IllegalArgumentException();
+           // throw new IllegalArgumentException();
+            System.exit(1);
         }
         if (!Files.exists(Paths.get(filename))) {
             return null;
         }
-        return new FileTable(name, filename);
+        return new NewFileTable(name, filename);
     }
 
     @Override
@@ -71,18 +76,20 @@ public class FileTableProvider implements TableProvider {
         if (Files.exists(Paths.get(filename))) {
             return null;
         }
-        return new FileTable(name, filename);
+        return new NewFileTable(name, filename);
     }
 
     @Override
     public void removeTable(String name) {
         if (name == null) {
-            throw new IllegalArgumentException();
+            //throw new IllegalArgumentException();
+            System.exit(1);
         }
         try {
             String filename = getFileName(name);
             if (filename == null || !Files.exists(Paths.get(filename))) {
-                throw new IllegalArgumentException();
+                //throw new IllegalArgumentException();
+                System.exit(1);
             }
             Files.delete(Paths.get(filename));
         } catch (IOException e) {
