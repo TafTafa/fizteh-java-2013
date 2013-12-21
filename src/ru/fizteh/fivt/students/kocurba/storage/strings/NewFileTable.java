@@ -153,11 +153,16 @@ public class NewFileTable implements Table {
     @Override
     public int commit() {
           try {
-                File workingDir = new File(System.getProperty("user.dir"));
-                StateWrap<File> state = new StateWrap<File>(workingDir.getCanonicalFile());
-                 String[] args = {"asd", name};
-                Command<File> rm = new RmCommand();
-                rm.executeCommand(state,args );
+              File workingDir = new File(System.getProperty("fizteh.db.dir"), name);
+              StateWrap<File> state = new StateWrap<File>(workingDir.getCanonicalFile());
+              String[] listFile = workingDir.list();
+              if (listFile != null) {
+              for (String str : listFile) {
+                    String[] args = {"asd",str };
+                    Command<File> rm = new RmCommand();
+                    rm.executeCommand(state,args );
+              }
+              }
           } catch (IOException e) {
               //
           }
