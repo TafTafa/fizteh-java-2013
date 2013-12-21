@@ -57,41 +57,6 @@ public class FileTable implements Table {
         ++this.commitSize;
         return data.remove(key);
     }
-         /*
-    @Override
-    public int rollback() {
-        byte[] rawData;
-        try {
-            rawData = Files.readAllBytes(Paths.get(this.filename));
-        } catch (IOException e) {
-            e.printStackTrace();
-            int result = commitSize;
-            commitSize = 0;
-            return result;
-        }
-        this.data = new HashMap<String, String>();
-
-        for (int i = 0; i < rawData.length;) {
-            int keyLength = rawData[i++];
-            int valueLength = rawData[i++];
-
-            byte[] rawKey = new byte[keyLength];
-            for (int j = 0; j < keyLength; ++j) {
-                rawKey[j] = rawData[i++];
-            }
-
-            byte[] rawValue = new byte[valueLength];
-            for (int j = 0; j < valueLength; ++j) {
-                rawValue[j] = rawData[i++];
-            }
-
-            data.put(new String(rawKey), new String(rawValue));
-        }
-        int result = commitSize;
-        commitSize = 0;
-        return result;
-    }             */
-
 
     public int rollback() {
         DataInputStream inStream;

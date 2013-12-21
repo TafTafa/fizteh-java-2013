@@ -24,7 +24,8 @@ public class FileTableProvider implements TableProvider {
         if (!Files.isDirectory(Paths.get(filename))) {
             return null;
         }
-        filename += String.valueOf(tableName.hashCode() % 16) + ".dir/";
+        //filename += String.valueOf(tableName.hashCode() % 16) + ".dir/";
+        filename += tableName + ".dir/";
         if (Files.exists(Paths.get(filename)) && !Files.isDirectory(Paths.get(filename))) {
             return null;
         }
@@ -35,10 +36,11 @@ public class FileTableProvider implements TableProvider {
                 return null;
             }
         }
+        /*
         filename += String.valueOf(tableName.hashCode() / 16 % 16) + ".dat";
         if (Files.isDirectory(Paths.get(filename))) {
             return null;
-        }
+        } */
         return filename;
     }
 
@@ -60,11 +62,13 @@ public class FileTableProvider implements TableProvider {
     @Override
     public Table createTable(String name) {
         if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException();
+            //throw new IllegalArgumentException();
+            System.exit(1);
         }
         String filename = getFileName(name);
         if (filename == null) {
-            throw new IllegalArgumentException();
+            //throw new IllegalArgumentException();
+            System.exit(1);
         }
         if (Files.exists(Paths.get(filename))) {
             return null;
