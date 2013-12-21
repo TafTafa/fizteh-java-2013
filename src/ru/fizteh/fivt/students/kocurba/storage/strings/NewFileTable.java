@@ -10,6 +10,10 @@ import java.io.*;
 import java.util.Set;
 
 import ru.fizteh.fivt.storage.strings.Table;
+import ru.fizteh.fivt.students.kocurba.shell.Shell;
+import ru.fizteh.fivt.students.kocurba.shell.StateWrap;
+import ru.fizteh.fivt.students.kocurba.shell.command.Command;
+import ru.fizteh.fivt.students.kocurba.shell.command.RmCommand;
 
 public class NewFileTable implements Table {
 
@@ -148,12 +152,15 @@ public class NewFileTable implements Table {
     }
     @Override
     public int commit() {
-        try {
-        Files.delete(Paths.get(filename));
-        Files.createDirectory(Paths.get(filename));
-        } catch (IOException e) {
-            //
-        }
+          try {
+                File workingDir = new File(System.getProperty("user.dir"));
+                StateWrap<File> state = new StateWrap<File>(workingDir.getCanonicalFile());
+                 String[] args = {"asd", name};
+                Command<File> rm = new RmCommand();
+                rm.executeCommand(state,args );
+          } catch (IOException e) {
+              //
+          }
 
         Set<String> keys = data.keySet();
         try {
