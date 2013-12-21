@@ -14,7 +14,8 @@ public class FileTableProvider implements TableProvider {
     public FileTableProvider(String dir) {
         this.dir = dir + "/";
         if (!Files.isDirectory(Paths.get(this.dir))) {
-            throw new IllegalArgumentException();
+           // throw new IllegalArgumentException();
+            System.exit(1);
         }
     }
 
