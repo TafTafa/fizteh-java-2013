@@ -25,7 +25,7 @@ public class UseCommand implements Command<State> {
         if (state.getState().getCurrentTable() != null && state.getState().getCurrentTable().size() > 0) {
             //System.err.println(state.getState().getCurrentTable().size() + " unsaved changes");
             state.getState().getCurrentTable().commit();
-            return;
+            //return;
         }
 
         Table newTable = state.getState().getTableProvider().getTable(arguments[1]);
