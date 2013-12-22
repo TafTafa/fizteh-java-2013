@@ -51,7 +51,9 @@ public class FileTableProvider implements TableProvider {
             //throw new IllegalArgumentException();
             System.exit(1);
         }
+
         String filename = getFileName(name);
+
         if (filename == null) {
            // throw new IllegalArgumentException();
             System.exit(1);
@@ -88,8 +90,8 @@ public class FileTableProvider implements TableProvider {
         try {
             String filename = getFileName(name);
             if (filename == null || !Files.exists(Paths.get(filename))) {
-                //throw new IllegalArgumentException();
-                System.exit(1);
+                throw new IllegalArgumentException();
+                //System.exit(1);
             }
             Files.delete(Paths.get(filename));
         } catch (IOException e) {
