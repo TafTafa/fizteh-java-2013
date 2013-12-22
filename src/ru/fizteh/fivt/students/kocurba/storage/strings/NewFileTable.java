@@ -109,9 +109,9 @@ public class NewFileTable implements Table {
                 }   catch (IOException e2)  {
                     //e2.printStackTrace();
                 }  finally {
-                    try{
+                    try {
                         inStream.close();
-                    } catch (IOException e){
+                    } catch (IOException e) {
                     //
                     }
                 }
@@ -152,9 +152,9 @@ public class NewFileTable implements Table {
               String[] listFile = workingDir.list();
               if (listFile != null) {
               for (String str : listFile) {
-                    String[] args = {"asd",str };
+                    String[] args = {"asd", str};
                     Command<File> rm = new RmCommand();
-                    rm.executeCommand(state,args );
+                    rm.executeCommand(state, args);
               }
               }
           } catch (IOException e) {
