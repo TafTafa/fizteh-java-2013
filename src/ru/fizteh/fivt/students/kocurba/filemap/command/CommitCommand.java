@@ -24,7 +24,10 @@ public class CommitCommand implements Command<State> {
             System.err.println("no table");
             return;
         }
-        state.getState().getCurrentTable().commit();
+
+        System.out.print(state.getState().getCurrentTable().commit());
+
+
     }
 
 }

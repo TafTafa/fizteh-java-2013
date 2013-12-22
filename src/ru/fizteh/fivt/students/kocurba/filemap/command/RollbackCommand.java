@@ -24,7 +24,7 @@ public class RollbackCommand implements Command<State> {
             System.err.println("no table");
             return;
         }
-        state.getState().getCurrentTable().rollback();
+        System.out.print(state.getState().getCurrentTable().rollback());
     }
 
 }
