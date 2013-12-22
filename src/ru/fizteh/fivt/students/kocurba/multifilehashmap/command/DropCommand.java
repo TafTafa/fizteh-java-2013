@@ -26,7 +26,7 @@ public class DropCommand implements Command<State> {
         }
         try {
             state.getState().getTableProvider().removeTable(arguments[1]);
-        } catch (IllegalStateException exception) {
+        } catch (IllegalArgumentException exception) {
             System.err.println(arguments[1] + " not exists");
             return;
         }
