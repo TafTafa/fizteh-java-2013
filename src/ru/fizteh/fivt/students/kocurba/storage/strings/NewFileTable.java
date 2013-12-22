@@ -69,11 +69,11 @@ public class NewFileTable implements Table {
 
         this.data = new HashMap<String, String>();
         for (int i = 0; i < 16 ; ++i) {
-            File dir = new File(new File(System.getProperty("fizteh.db.dir"), this.name ), new String(i + ".dir"));
+            File dir = new File(new File(System.getProperty("fizteh.db.dir"), this.name), new String(i + ".dir"));
 
             for (int j = 0; j < 16 ; ++j) {
                 File file = new File(dir, new String(j + ".dat"));
-                   if (file.exists()){
+                   if (file.exists()) {
                 DataInputStream inStream;
                 try {
                     inStream = new DataInputStream(new FileInputStream(file));
@@ -109,15 +109,13 @@ public class NewFileTable implements Table {
                 }   catch (IOException e2)  {
                     //e2.printStackTrace();
                 }  finally {
-
-
-                try{
-                inStream.close();
-                } catch (IOException e){
-                                       //
+                    try{
+                        inStream.close();
+                    } catch (IOException e){
+                    //
+                    }
                 }
                 }
-                   }
             }
         }
         int result = commitSize;
@@ -126,11 +124,7 @@ public class NewFileTable implements Table {
 
     }
 
-    void writeMap(File file, Map<String, String> map){
-
-
-
-
+    void writeMap(File file, Map<String, String> map) {
         try {
             DataOutputStream outStream = new DataOutputStream(new FileOutputStream(file.getCanonicalFile()));
 
@@ -170,10 +164,10 @@ public class NewFileTable implements Table {
         Set<String> keys = data.keySet();
         try {
             if (!keys.isEmpty()) {
-                for (int i = 0; i < 16 ; ++i) {
-                    File dir = new File(new File( new File(System.getProperty("fizteh.db.dir")), this.name),
+                for (int i = 0; i < 16; ++i) {
+                    File dir = new File(new File(new File(System.getProperty("fizteh.db.dir")), this.name),
                             new String(i + ".dir"));
-                    for (int j = 0; j < 16 ; ++j) {
+                    for (int j = 0; j < 16; ++j) {
                         Map<String, String> map = new HashMap<String, String>();
                         //DataTable keysToFile = new DataTable();
                         File file = new File(dir, new String(j + ".dat"));
