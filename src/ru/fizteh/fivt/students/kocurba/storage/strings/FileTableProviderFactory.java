@@ -8,8 +8,8 @@ public class FileTableProviderFactory implements TableProviderFactory {
     @Override
     public TableProvider create(String dir) {
         if (dir == null) {
-           // throw new IllegalArgumentException();
-            System.exit(1);
+            throw new IllegalArgumentException();
+            //System.exit(1);
         }
         return new FileTableProvider(dir);
     }
