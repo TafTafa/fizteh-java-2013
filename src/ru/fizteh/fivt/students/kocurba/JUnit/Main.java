@@ -15,8 +15,15 @@ public class Main {
     public static void main(String[] args)  {
 
         TableProviderFactory tableProviderFactory = new FileTableProviderFactory();
+        try {
+
+
         StateWrap<State> state = new StateWrap<State>(new State(tableProviderFactory.create(System
                 .getProperty("fizteh.db.dir")), null));
+        } catch (IllegalArgumentException e) {
+            System.exit(1);
+        }
+
         Shell<State> shell = new Shell<State>(state);
 
 
