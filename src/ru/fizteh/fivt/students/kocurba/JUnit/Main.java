@@ -20,9 +20,7 @@ public class Main {
 
         StateWrap<State> state = new StateWrap<State>(new State(tableProviderFactory.create(System
                 .getProperty("fizteh.db.dir")), null));
-        } catch (IllegalArgumentException e) {
-            System.exit(1);
-        }
+
 
         Shell<State> shell = new Shell<State>(state);
 
@@ -47,7 +45,9 @@ public class Main {
         } else {
             shell.interactiveMode(commands);
         }
-
+        } catch (IllegalArgumentException e) {
+            System.exit(1);
+        }
         System.exit(0);
     }
 
