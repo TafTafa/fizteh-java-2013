@@ -20,7 +20,8 @@ public class NewFileTable implements Table {
     private String name;
     private String filename;
     private Map<String, String> data;
-    private int commitSize;
+    private Map<String, String> trueData;
+
 
     public NewFileTable(String name, String filename) {
         this.name = name;
@@ -36,7 +37,91 @@ public class NewFileTable implements Table {
             }
         }
         this.filename = filename;
-        rollback();
+        try {
+            read();
+        } catch (IOException e) {
+            //do smth
+        }
+    }
+
+
+    public void CopyMap(Map<String, String> map, Map<String, String> map2) {
+        if (!map.isEmpty()) {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+             map2.put(entry.getKey(), entry.getValue());
+        }
+        }
+    }
+
+    public int CommitSize() {
+        int size = 0;
+        if (!trueData.isEmpty()) {
+            for (Map.Entry<String, String> entry : trueData.entrySet()) {
+                if (data.get(entry.getKey()) != entry.getValue()) {
+                    size++;
+                }
+
+            }
+        }
+        if (!data.isEmpty())  {
+            for (Map.Entry<String, String> entry : data.entrySet()) {
+                if (trueData.get(entry.getKey()) == null) {
+                    size++;
+                }
+            }
+        }
+        return size;
+    }
+
+    private void read() throws IOException{
+
+        this.data = new HashMap<String, String>();
+        this.trueData = new HashMap<String, String>();
+        for (int i = 0; i < 16 ; ++i) {
+            File dir = new File(new File(System.getProperty("fizteh.db.dir"), this.name), new String(i + ".dir"));
+
+            for (int j = 0; j < 16 ; ++j) {
+                File file = new File(dir, new String(j + ".dat"));
+                if (file.exists()) {
+                    DataInputStream inStream = new DataInputStream(new FileInputStream(file));
+                    try {
+                        for (; ; ) {
+                            int keyLength = inStream.readInt();
+                            int valueLength = inStream.readInt();
+
+                            byte[] rawKey = new byte[keyLength];
+                            for (int q = 0; q < keyLength; ++q) {
+                                rawKey[q] = inStream.readByte();
+                            }
+
+                            byte[] rawValue = new byte[valueLength];
+                            for (int q = 0; q < valueLength; ++q) {
+                                rawValue[q] = inStream.readByte();
+                            }
+
+                            trueData.put(new String(rawKey), new String(rawValue));
+                        }
+
+
+
+                    }   catch (EOFException e)  {
+                        //do nothing
+                    }   catch (IOException e2)  {
+                        //e2.printStackTrace();
+                    }  finally {
+                        try {
+                            inStream.close();
+                        } catch (IOException e) {
+                            //
+                        }
+                    }
+                }
+            }
+        }
+
+    data = new HashMap<String, String>();
+    CopyMap(this.trueData, this.data);
+
     }
 
     @Override
@@ -44,7 +129,6 @@ public class NewFileTable implements Table {
         if (key == null || value == null) {
             throw new IllegalArgumentException();
         }
-        ++this.commitSize;
         return data.put(key, value);
     }
 
@@ -61,70 +145,20 @@ public class NewFileTable implements Table {
         if (key == null) {
             throw new IllegalArgumentException();
         }
-        ++this.commitSize;
         return data.remove(key);
     }
 
     public int rollback() {
 
-        this.data = new HashMap<String, String>();
-        for (int i = 0; i < 16 ; ++i) {
-            File dir = new File(new File(System.getProperty("fizteh.db.dir"), this.name), new String(i + ".dir"));
+        int result = CommitSize();
 
-            for (int j = 0; j < 16 ; ++j) {
-                File file = new File(dir, new String(j + ".dat"));
-                   if (file.exists()) {
-                DataInputStream inStream;
-                try {
-                    inStream = new DataInputStream(new FileInputStream(file));
-                } catch (IOException e) {
-                   // e.printStackTrace();
-                    int result = commitSize;
-                    commitSize = 0;
-                    return result;
-                }
-
-                try {
-                    for (; ; ) {
-                        int keyLength = inStream.readInt();
-                        int valueLength = inStream.readInt();
-
-                        byte[] rawKey = new byte[keyLength];
-                        for (int q = 0; q < keyLength; ++q) {
-                            rawKey[q] = inStream.readByte();
-                        }
-
-                        byte[] rawValue = new byte[valueLength];
-                        for (int q = 0; q < valueLength; ++q) {
-                            rawValue[q] = inStream.readByte();
-                        }
-
-                        data.put(new String(rawKey), new String(rawValue));
-                    }
-
-
-
-                }   catch (EOFException e)  {
-                    //do nothing
-                }   catch (IOException e2)  {
-                    //e2.printStackTrace();
-                }  finally {
-                    try {
-                        inStream.close();
-                    } catch (IOException e) {
-                    //
-                    }
-                }
-                }
-            }
-        }
-        int result = commitSize;
-        commitSize = 0;
+        data = new HashMap<String, String>();
+        CopyMap(trueData, data);
         return result;
 
     }
 
-    void writeMap(File file, Map<String, String> map) {
+    private void writeMap(File file, Map<String, String> map) {
         try {
             DataOutputStream outStream = new DataOutputStream(new FileOutputStream(file.getCanonicalFile()));
 
@@ -146,21 +180,21 @@ public class NewFileTable implements Table {
     }
     @Override
     public int commit() {
-          try {
-              File workingDir = new File(System.getProperty("fizteh.db.dir"), name);
-              StateWrap<File> state = new StateWrap<File>(workingDir.getCanonicalFile());
-              String[] listFile = workingDir.list();
-              if (listFile != null) {
-              for (String str : listFile) {
+        try {
+            File workingDir = new File(System.getProperty("fizteh.db.dir"), name);
+            StateWrap<File> state = new StateWrap<File>(workingDir.getCanonicalFile());
+            String[] listFile = workingDir.list();
+            if (listFile != null) {
+                for (String str : listFile) {
                     String[] args = {"asd", str};
                     Command<File> rm = new RmCommand();
                     rm.executeCommand(state, args);
-              }
-              }
-          } catch (IOException e) {
+                }
+            }
+        } catch (IOException e) {
               //
-          }
-
+        }
+        int result = CommitSize();
         Set<String> keys = data.keySet();
         try {
             if (!keys.isEmpty()) {
@@ -169,15 +203,14 @@ public class NewFileTable implements Table {
                             new String(i + ".dir"));
                     for (int j = 0; j < 16; ++j) {
                         Map<String, String> map = new HashMap<String, String>();
-                        //DataTable keysToFile = new DataTable();
                         File file = new File(dir, new String(j + ".dat"));
                         for (String key : keys) {
 
-                            int hashcode = Math.abs(key.hashCode());
-                            int ndirectory = hashcode % 16;
-                            int nfile = hashcode / 16 % 16 ;
+                            int hashCode = Math.abs(key.hashCode());
+                            int nDirectory = hashCode % 16;
+                            int nFile = hashCode / 16 % 16 ;
 
-                            if ((ndirectory == i) && (nfile == j)) {
+                            if ((nDirectory == i) && (nFile == j)) {
                                 if (!dir.getCanonicalFile().exists()) {
 
                                     dir.getCanonicalFile().mkdir();
@@ -205,8 +238,8 @@ public class NewFileTable implements Table {
                 e.printStackTrace();
         }
 
-        int result = commitSize;
-        commitSize = 0;
+        trueData = new HashMap<String, String>();
+        CopyMap(data, trueData);
         return result;
     }
 
@@ -217,12 +250,10 @@ public class NewFileTable implements Table {
         return this.name;
     }
 
-    public String getFilename() {
-        return this.filename;
-    }
+
     @Override
     public int size() {
-        return this.commitSize;
+        return this.data.size();
     }
 
 }

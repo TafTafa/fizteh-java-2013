@@ -29,9 +29,11 @@ public class Main {
         Command<State> newUseCommand = new NewUseCommand();
         Command<State> commitCommand = new CommitCommand();
         Command<State> rollbackCommand = new RollbackCommand();
+        Command<State> sizeCommand = new SizeCommand();
+
 
         Command[] commands = {putCommand, getCommand, removeCommand, createCommand, dropCommand, newUseCommand,
-                exitCommand, commitCommand, rollbackCommand};
+                exitCommand, commitCommand, rollbackCommand, sizeCommand};
 
         if (0 != args.length) {
             shell.batchMode(args, commands);

@@ -4,6 +4,7 @@ import ru.fizteh.fivt.storage.strings.Table;
 import ru.fizteh.fivt.students.kocurba.filemap.command.State;
 import ru.fizteh.fivt.students.kocurba.shell.StateWrap;
 import ru.fizteh.fivt.students.kocurba.shell.command.Command;
+import ru.fizteh.fivt.students.kocurba.storage.strings.NewFileTable;
 
 import java.io.IOException;
 
@@ -22,8 +23,8 @@ public class NewUseCommand implements Command<State> {
     @Override
     public void executeCommand(StateWrap<State> state, String[] arguments)
             throws IOException {
-        if (state.getState().getCurrentTable() != null && state.getState().getCurrentTable().size() > 0) {
-            System.err.println(state.getState().getCurrentTable().size() + " unsaved changes");
+        if (state.getState().getCurrentTable() != null && ((NewFileTable)state.getState().getCurrentTable()).CommitSize() > 0) {
+            System.err.println(((NewFileTable)state.getState().getCurrentTable()).CommitSize() + " unsaved changes");
             //state.getState().getCurrentTable().commit();
             return;
         }

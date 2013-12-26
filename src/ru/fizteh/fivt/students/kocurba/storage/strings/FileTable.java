@@ -16,6 +16,7 @@ public class FileTable implements Table {
     private Map<String, String> data;
     private int commitSize;
 
+
     public FileTable(String name, String filename) {
         this.name = name;
         if (filename == null) {
@@ -95,6 +96,7 @@ public class FileTable implements Table {
         commitSize = 0;
         return result;
     }
+
     @Override
     public int commit() {
 
@@ -126,10 +128,11 @@ public class FileTable implements Table {
     public String getName() {
         return this.name;
     }
-
+    /*
     public String getFilename() {
         return this.filename;
-    }
+    } */
+
     @Override
     public int size() {
         return this.commitSize;

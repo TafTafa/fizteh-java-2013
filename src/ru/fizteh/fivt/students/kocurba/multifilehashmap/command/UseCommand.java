@@ -22,17 +22,20 @@ public class UseCommand implements Command<State> {
     @Override
     public void executeCommand(StateWrap<State> state, String[] arguments)
             throws IOException {
-        if (state.getState().getCurrentTable() != null && state.getState().getCurrentTable().size() > 0) {
-            //System.err.println(state.getState().getCurrentTable().size() + " unsaved changes");
-            state.getState().getCurrentTable().commit();
-            //return;
-        }
 
         Table newTable = state.getState().getTableProvider().getTable(arguments[1]);
         if (newTable == null) {
             System.err.println(arguments[1] + " not exists");
             return;
         }
+
+        if (state.getState().getCurrentTable() != null && state.getState().getCurrentTable().size() > 0) {
+            //System.err.println(state.getState().getCurrentTable().size() + " unsaved changes");
+            state.getState().getCurrentTable().commit();
+            //return;
+        }
+
+
         state.getState().setCurrentTable(newTable);
         System.out.println("using " + arguments[1]);
     }

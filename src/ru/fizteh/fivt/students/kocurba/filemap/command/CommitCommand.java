@@ -25,7 +25,7 @@ public class CommitCommand implements Command<State> {
             return;
         }
 
-        System.out.print(state.getState().getCurrentTable().commit());
+        System.out.println(state.getState().getCurrentTable().commit());
 
 
     }
