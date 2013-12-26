@@ -49,7 +49,9 @@ public class Shell<T> {
         String[] commands = sb.toString().split(";");
         for (String command : commands) {
             command = command.trim();
-
+            if (command.equals("")) {
+                continue;
+            }
             try {
                 String[] commandArgs = command.split("\\s+");
                 executor.execute(state, commandArgs);
@@ -60,6 +62,7 @@ public class Shell<T> {
             }
 
         }
+
 
     }
 }

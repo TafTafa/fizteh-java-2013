@@ -18,11 +18,9 @@ public class CmdExecutor<T> {
 
     }
 
-    public void execute(StateWrap<T> state, String[] arguments)
-            throws IOException {
+    public void execute(StateWrap<T> state, String[] arguments) throws IOException {
         if (arguments.length != (commandHashMap.get(arguments[0]).getArgCount() + 1)) {
-            throw new IOException(commandHashMap.get(arguments[0])
-                    .getCommandName() + ": incorrect argument count.");
+            throw new IOException(commandHashMap.get(arguments[0]).getCommandName() + ": incorrect argument count.");
         }
         commandHashMap.get(arguments[0]).executeCommand(state, arguments);
     }
