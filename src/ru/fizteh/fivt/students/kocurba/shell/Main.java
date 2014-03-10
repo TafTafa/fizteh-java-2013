@@ -40,11 +40,13 @@ public class Main {
 
         Command[] command = {pwd, dir, mkdir, rm, cd, cp, mv, exit};
 
+
         if (0 != args.length) {
             shell.batchMode(args, command);
         } else {
             shell.interactiveMode(command);
         }
+
         System.exit(0);
     }
     }

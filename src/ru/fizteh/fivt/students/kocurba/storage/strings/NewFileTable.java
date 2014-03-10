@@ -10,7 +10,6 @@ import java.io.*;
 import java.util.Set;
 
 import ru.fizteh.fivt.storage.strings.Table;
-import ru.fizteh.fivt.students.kocurba.shell.Shell;
 import ru.fizteh.fivt.students.kocurba.shell.StateWrap;
 import ru.fizteh.fivt.students.kocurba.shell.command.Command;
 import ru.fizteh.fivt.students.kocurba.shell.command.RmCommand;
@@ -45,7 +44,7 @@ public class NewFileTable implements Table {
     }
 
 
-    public void CopyMap(Map<String, String> map, Map<String, String> map2) {
+    public void copyMap(Map<String, String> map, Map<String, String> map2) {
         if (!map.isEmpty()) {
         for (Map.Entry<String, String> entry : map.entrySet()) {
              map2.put(entry.getKey(), entry.getValue());
@@ -53,7 +52,7 @@ public class NewFileTable implements Table {
         }
     }
 
-    public int CommitSize() {
+    public int commitSize() {
         int size = 0;
         if (!trueData.isEmpty()) {
             for (Map.Entry<String, String> entry : trueData.entrySet()) {
@@ -73,7 +72,7 @@ public class NewFileTable implements Table {
         return size;
     }
 
-    private void read() throws IOException{
+    private void read() throws IOException {
 
         this.data = new HashMap<String, String>();
         this.trueData = new HashMap<String, String>();
@@ -120,7 +119,7 @@ public class NewFileTable implements Table {
         }
 
     data = new HashMap<String, String>();
-    CopyMap(this.trueData, this.data);
+    copyMap(this.trueData, this.data);
 
     }
 
@@ -150,10 +149,10 @@ public class NewFileTable implements Table {
 
     public int rollback() {
 
-        int result = CommitSize();
+        int result = commitSize();
 
         data = new HashMap<String, String>();
-        CopyMap(trueData, data);
+        copyMap(trueData, data);
         return result;
 
     }
@@ -194,7 +193,7 @@ public class NewFileTable implements Table {
         } catch (IOException e) {
               //
         }
-        int result = CommitSize();
+        int result = commitSize();
         Set<String> keys = data.keySet();
         try {
             if (!keys.isEmpty()) {
@@ -239,7 +238,7 @@ public class NewFileTable implements Table {
         }
 
         trueData = new HashMap<String, String>();
-        CopyMap(data, trueData);
+        copyMap(data, trueData);
         return result;
     }
 

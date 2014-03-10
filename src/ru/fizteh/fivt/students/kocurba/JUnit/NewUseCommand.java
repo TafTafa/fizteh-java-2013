@@ -23,8 +23,9 @@ public class NewUseCommand implements Command<State> {
     @Override
     public void executeCommand(StateWrap<State> state, String[] arguments)
             throws IOException {
-        if (state.getState().getCurrentTable() != null && ((NewFileTable)state.getState().getCurrentTable()).CommitSize() > 0) {
-            System.err.println(((NewFileTable)state.getState().getCurrentTable()).CommitSize() + " unsaved changes");
+        if (state.getState().getCurrentTable() != null &&
+                ((NewFileTable) state.getState().getCurrentTable()).commitSize() > 0) {
+            System.err.println(((NewFileTable) state.getState().getCurrentTable()).commitSize() + " unsaved changes");
             //state.getState().getCurrentTable().commit();
             return;
         }
