@@ -12,39 +12,39 @@ import ru.fizteh.fivt.students.kocurba.storage.strings.FileTableProviderFactory;
 
 public class Main {
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
 
         TableProviderFactory tableProviderFactory = new FileTableProviderFactory();
         try {
 
 
-        StateWrap<State> state = new StateWrap<State>(new State(tableProviderFactory.create(System
-                .getProperty("fizteh.db.dir")), null));
+            StateWrap<State> state = new StateWrap<State>(new State(tableProviderFactory.create(System
+                    .getProperty("fizteh.db.dir")), null));
 
 
-        Shell<State> shell = new Shell<State>(state);
+            Shell<State> shell = new Shell<State>(state);
 
 
-        Command<State> putCommand = new PutCommand();
-        Command<State> getCommand = new GetCommand();
-        Command<State> removeCommand = new RemoveCommand();
-        Command<State> exitCommand = new ExitCommand();
-        Command<State> createCommand = new CreateCommand();
-        Command<State> dropCommand = new DropCommand();
-        Command<State> newUseCommand = new NewUseCommand();
-        Command<State> commitCommand = new CommitCommand();
-        Command<State> rollbackCommand = new RollbackCommand();
-        Command<State> sizeCommand = new SizeCommand();
+            Command<State> putCommand = new PutCommand();
+            Command<State> getCommand = new GetCommand();
+            Command<State> removeCommand = new RemoveCommand();
+            Command<State> exitCommand = new ExitCommand();
+            Command<State> createCommand = new CreateCommand();
+            Command<State> dropCommand = new DropCommand();
+            Command<State> newUseCommand = new NewUseCommand();
+            Command<State> commitCommand = new CommitCommand();
+            Command<State> rollbackCommand = new RollbackCommand();
+            Command<State> sizeCommand = new SizeCommand();
 
 
-        Command[] commands = {putCommand, getCommand, removeCommand, createCommand, dropCommand, newUseCommand,
-                exitCommand, commitCommand, rollbackCommand, sizeCommand};
+            Command[] commands = {putCommand, getCommand, removeCommand, createCommand, dropCommand, newUseCommand,
+                    exitCommand, commitCommand, rollbackCommand, sizeCommand};
 
-        if (0 != args.length) {
-            shell.batchMode(args, commands);
-        } else {
-            shell.interactiveMode(commands);
-        }
+            if (0 != args.length) {
+                shell.batchMode(args, commands);
+            } else {
+                shell.interactiveMode(commands);
+            }
         } catch (IllegalArgumentException e) {
             System.exit(1);
         }
