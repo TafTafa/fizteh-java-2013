@@ -4,7 +4,6 @@ import ru.fizteh.fivt.storage.strings.TableProviderFactory;
 import ru.fizteh.fivt.students.kocurba.filemap.command.*;
 import ru.fizteh.fivt.students.kocurba.multifilehashmap.command.CreateCommand;
 import ru.fizteh.fivt.students.kocurba.multifilehashmap.command.DropCommand;
-import ru.fizteh.fivt.students.kocurba.multifilehashmap.command.UseCommand;
 import ru.fizteh.fivt.students.kocurba.shell.Shell;
 import ru.fizteh.fivt.students.kocurba.shell.StateWrap;
 import ru.fizteh.fivt.students.kocurba.shell.command.Command;
