@@ -14,11 +14,11 @@ import ru.fizteh.fivt.students.kocurba.storage.strings.FileTable;
 
 /**
  * Task 05 - JUnit
- * 
+ *
  * JUnit tests for {@link FileTable} class
- * 
+ *
  * @author Alina Kocurba
- * 
+ *
  */
 public class FileTableTest {
 
