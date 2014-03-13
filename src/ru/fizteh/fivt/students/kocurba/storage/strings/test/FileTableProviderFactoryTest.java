@@ -19,11 +19,6 @@ public class FileTableProviderFactoryTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
-    @Test
-    public void testCreateNotNull() throws IOException {
-        TableProviderFactory factory = new FileTableProviderFactory();
-        Assert.assertNotNull(factory.create(folder.newFolder("folder").getCanonicalPath()));
-    }
     @Test(expected = IllegalArgumentException.class)
     public void testCreateNull() {
         TableProviderFactory factory = new FileTableProviderFactory();
