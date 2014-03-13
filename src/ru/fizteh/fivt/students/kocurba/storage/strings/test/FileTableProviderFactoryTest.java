@@ -33,9 +33,5 @@ public class FileTableProviderFactoryTest {
         factory.create("/non-existing");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testIncorrectSymbolsInDirectoryName() {
-        factory.create("/\\");
-    }
 
 }
