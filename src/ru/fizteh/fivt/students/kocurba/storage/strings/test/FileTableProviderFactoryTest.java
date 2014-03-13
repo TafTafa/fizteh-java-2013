@@ -1,9 +1,9 @@
 package ru.fizteh.fivt.students.kocurba.storage.strings.test;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.*;
+import org.junit.rules.TemporaryFolder;
 import ru.fizteh.fivt.storage.strings.TableProviderFactory;
+import java.io.IOException;
 import ru.fizteh.fivt.students.kocurba.storage.strings.FileTableProviderFactory;
 
 /**
@@ -16,22 +16,18 @@ import ru.fizteh.fivt.students.kocurba.storage.strings.FileTableProviderFactory;
  */
 public class FileTableProviderFactoryTest {
 
-    private TableProviderFactory factory;
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
-    @Before
-    public void initFactory() {
-        factory = new FileTableProviderFactory();
+    @Test
+    public void testCreateNotNull() throws IOException {
+        TableProviderFactory factory = new FileTableProviderFactory();
+        Assert.assertNotNull(factory.create(folder.newFolder("folder").getCanonicalPath()));
     }
-
     @Test(expected = IllegalArgumentException.class)
-    public void testNullDirectoryName() {
+    public void testCreateNull() {
+        TableProviderFactory factory = new FileTableProviderFactory();
         factory.create(null);
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNonExistingDirectoryName() {
-        factory.create("/non-existing");
-    }
-
 
 }
