@@ -3,7 +3,6 @@ package ru.fizteh.fivt.students.kocurba.storage.strings.test;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import ru.fizteh.fivt.storage.strings.TableProviderFactory;
-import java.io.IOException;
 import ru.fizteh.fivt.students.kocurba.storage.strings.FileTableProviderFactory;
 
 /**
