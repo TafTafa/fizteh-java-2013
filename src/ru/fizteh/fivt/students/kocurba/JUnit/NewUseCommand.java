@@ -1,6 +1,5 @@
 package ru.fizteh.fivt.students.kocurba.JUnit;
 
-import ru.fizteh.fivt.storage.structured.Table;
 import ru.fizteh.fivt.students.kocurba.filemap.command.State;
 import ru.fizteh.fivt.students.kocurba.shell.StateWrap;
 import ru.fizteh.fivt.students.kocurba.shell.command.Command;
@@ -25,7 +24,8 @@ public class NewUseCommand implements Command<State> {
             throws IOException {
         if (state.getState().getCurrentTable() != null
                 && ((StoreableTable) state.getState().getCurrentTable()).getNumberOfChanges() > 0) {
-            System.err.println(((StoreableTable) state.getState().getCurrentTable()).getNumberOfChanges() + " unsaved changes");
+            System.err.println(((StoreableTable) state.getState().getCurrentTable()).getNumberOfChanges()
+                    + " unsaved changes");
             //state.getState().getCurrentTable().commit();
             return;
         }

@@ -30,7 +30,8 @@ public class GetCommand implements Command<State> {
             System.out.println("not found");
         } else {
             System.out.println("found");
-            System.out.println(state.getState().getTableProvider().serialize(state.getState().getCurrentTable(), result));
+            System.out.println(state.getState().getTableProvider().serialize(state.getState().getCurrentTable(),
+                    result));
         }
     }
 

@@ -22,7 +22,8 @@ public class CmdExecutor<T> {
         if (commandHashMap.get(arguments[0]) == null) {
             throw new IOException(arguments[0] + " incorrect command.");
         }
-        if (arguments.length != (commandHashMap.get(arguments[0]).getArgCount() + 1) && commandHashMap.get(arguments[0]).getArgCount() != -1) {
+        if (arguments.length != (commandHashMap.get(arguments[0]).getArgCount() + 1)
+                && commandHashMap.get(arguments[0]).getArgCount() != -1) {
             throw new IOException(commandHashMap.get(arguments[0]).getCommandName() + ": incorrect argument count.");
         }
         commandHashMap.get(arguments[0]).executeCommand(state, arguments);

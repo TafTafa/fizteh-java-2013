@@ -61,7 +61,7 @@ public class StoreableTableProvider implements TableProvider {
     }
 
     private void checkName(String name) {
-        if ((name == null) || name.trim().length() == 0) {
+        if (!name.matches("[a-zA-Zа-яА-Я0-9]+") || (name == null) || name.trim().length() == 0) {
             throw new IllegalArgumentException("Bad name!");
         }
 

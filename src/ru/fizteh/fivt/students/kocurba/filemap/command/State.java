@@ -1,6 +1,5 @@
 package ru.fizteh.fivt.students.kocurba.filemap.command;
 
-import ru.fizteh.fivt.storage.structured.Table;
 import ru.fizteh.fivt.storage.structured.TableProvider;
 import ru.fizteh.fivt.students.kocurba.storeable.StoreableTable;
 

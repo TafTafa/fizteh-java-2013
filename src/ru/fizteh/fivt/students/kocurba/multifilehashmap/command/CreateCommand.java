@@ -23,7 +23,8 @@ public class CreateCommand implements Command<State> {
     @Override
     public void executeCommand(StateWrap<State> state, String[] arguments)
             throws IOException {
-        Table newTable = state.getState().getTableProvider().createTable(arguments[1], MySignature.getTypes(getSpacedArg(arguments, 2)));
+        Table newTable = state.getState().getTableProvider().createTable(arguments[1],
+                MySignature.getTypes(getSpacedArg(arguments, 2)));
         if (newTable == null) {
             System.err.println(arguments[1] + " exists");
             return;

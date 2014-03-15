@@ -27,12 +27,14 @@ public class PutCommand implements Command<State> {
             return;
         }
         try {
-            Storeable oldValue = state.getState().getCurrentTable().putStoreable(arguments[1], getSpacedArg(arguments, 2));
+            Storeable oldValue = state.getState().getCurrentTable().putStoreable(arguments[1],
+                    getSpacedArg(arguments, 2));
             if (oldValue == null) {
                 System.out.println("new");
             } else {
                 System.out.println("overwrite");
-                System.out.println(state.getState().getTableProvider().serialize(state.getState().getCurrentTable(), oldValue));
+                System.out.println(state.getState().getTableProvider().serialize(state.getState().getCurrentTable(),
+                        oldValue));
             }
         } catch (ParseException e) {
             System.out.println("wrong type (" + e.getMessage() + ")");

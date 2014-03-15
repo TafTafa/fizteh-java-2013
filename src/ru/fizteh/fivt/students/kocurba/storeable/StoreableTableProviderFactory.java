@@ -1,6 +1,5 @@
 package ru.fizteh.fivt.students.kocurba.storeable;
 
-import ru.fizteh.fivt.storage.structured.TableProvider;
 import ru.fizteh.fivt.storage.structured.TableProviderFactory;
 
 import java.io.IOException;
