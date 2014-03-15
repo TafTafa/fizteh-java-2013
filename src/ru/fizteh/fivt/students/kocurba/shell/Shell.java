@@ -19,15 +19,14 @@ public class Shell<T> {
 
         System.out.print("$ ");
 
-        String command = inputScanner.nextLine();
-
         while (true) {
             try {
+                String command = inputScanner.nextLine();
                 command = command.trim();
                 String[] commandArgs = command.split("\\s+");
-                executor.execute(state, commandArgs);
-                System.out.print("$ ");
-                command = inputScanner.nextLine();
+                if (!command.isEmpty()) {
+                    executor.execute(state, commandArgs);
+                }
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             } finally {
