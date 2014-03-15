@@ -83,7 +83,7 @@ public class MySignature {
     public static List<Class<?>> getTypes(final String str) throws IOException {
         List<Class<?>> result = new ArrayList<>();
         byte[] s = str.trim().getBytes();
-        if (str.equals("")) {
+        if (str.equals("") || str.equals("()")) {
             throw new IOException("wrong type (no types)");
         }
         if (!(s[0] == '(' && s[str.length() - 1] == ')')) {
