@@ -1,14 +1,15 @@
 package ru.fizteh.fivt.students.kocurba.filemap.command;
 
-import ru.fizteh.fivt.storage.strings.Table;
-import ru.fizteh.fivt.storage.strings.TableProvider;
+import ru.fizteh.fivt.storage.structured.Table;
+import ru.fizteh.fivt.storage.structured.TableProvider;
+import ru.fizteh.fivt.students.kocurba.storeable.StoreableTable;
 
 public class State {
 
-    private Table currentTable;
+    private StoreableTable currentTable;
     private TableProvider tableProvider;
 
-    public State(TableProvider tableProvider, Table currentTable) {
+    public State(TableProvider tableProvider, StoreableTable currentTable) {
         this.tableProvider = tableProvider;
         this.currentTable = currentTable;
     }
@@ -17,7 +18,7 @@ public class State {
         this(tableProvider, null);
     }
 
-    public Table getCurrentTable() {
+    public StoreableTable getCurrentTable() {
         return this.currentTable;
     }
 
@@ -25,7 +26,7 @@ public class State {
         return this.tableProvider;
     }
 
-    public void setCurrentTable(Table newTable) {
+    public void setCurrentTable(StoreableTable newTable) {
         this.currentTable = newTable;
     }
 

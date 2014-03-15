@@ -1,10 +1,10 @@
 package ru.fizteh.fivt.students.kocurba.JUnit;
 
-import ru.fizteh.fivt.storage.strings.Table;
+import ru.fizteh.fivt.storage.structured.Table;
 import ru.fizteh.fivt.students.kocurba.filemap.command.State;
 import ru.fizteh.fivt.students.kocurba.shell.StateWrap;
 import ru.fizteh.fivt.students.kocurba.shell.command.Command;
-import ru.fizteh.fivt.students.kocurba.storage.strings.NewFileTable;
+import ru.fizteh.fivt.students.kocurba.storeable.StoreableTable;
 
 import java.io.IOException;
 
@@ -24,13 +24,13 @@ public class NewUseCommand implements Command<State> {
     public void executeCommand(StateWrap<State> state, String[] arguments)
             throws IOException {
         if (state.getState().getCurrentTable() != null
-                && ((NewFileTable) state.getState().getCurrentTable()).commitSize() > 0) {
-            System.err.println(((NewFileTable) state.getState().getCurrentTable()).commitSize() + " unsaved changes");
+                && ((StoreableTable) state.getState().getCurrentTable()).getNumberOfChanges() > 0) {
+            System.err.println(((StoreableTable) state.getState().getCurrentTable()).getNumberOfChanges() + " unsaved changes");
             //state.getState().getCurrentTable().commit();
             return;
         }
 
-        Table newTable = state.getState().getTableProvider().getTable(arguments[1]);
+        StoreableTable newTable = (StoreableTable) state.getState().getTableProvider().getTable(arguments[1]);
         if (newTable == null) {
             System.err.println(arguments[1] + " not exists");
             return;

@@ -17,11 +17,11 @@ public class Main {
         try {
 
 
-            StateWrap<State> state = new StateWrap<State>(new State(tableProviderFactory.create(System
+            StateWrap<NewState> state = new StateWrap<NewState>(new NewState(tableProviderFactory.create(System
                     .getProperty("fizteh.db.dir")), null));
 
 
-            Shell<State> shell = new Shell<State>(state);
+            Shell<NewState> shell = new Shell<NewState>(state);
 
 
             Command<State> putCommand = new PutCommand();

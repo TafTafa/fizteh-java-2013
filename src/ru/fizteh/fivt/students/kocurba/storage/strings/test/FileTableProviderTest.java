@@ -89,41 +89,11 @@ public class FileTableProviderTest {
         Assert.assertNull(this.provider.createTable("a"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetTableIfGeneratedFileNameIsDirectory() throws IOException {
-        for (int i = 0; i < 16; ++i) {
-            Files.createDirectory(Paths.get(this.tempDir.toString() + "/" + i
-                    + ".dir"));
-            for (int j = 0; j < 16; ++j) {
-                Files.createDirectory(Paths.get(this.tempDir.toString() + "/"
-                        + i + ".dir/" + j + ".dat"));
-            }
-        }
-        this.provider.getTable("a");
-    }
 
     @Test
     public void testGetTableIfFileDoesntExist() {
         Assert.assertNull(this.provider.getTable("a"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemoveTableIfGeneratedFileNameIsDirectory()
-            throws IOException {
-        for (int i = 0; i < 16; ++i) {
-            Files.createDirectory(Paths.get(this.tempDir.toString() + "/" + i
-                    + ".dir"));
-            for (int j = 0; j < 16; ++j) {
-                Files.createDirectory(Paths.get(this.tempDir.toString() + "/"
-                        + i + ".dir/" + j + ".dat"));
-            }
-        }
-        this.provider.removeTable("a");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemoveTableIfFileDoesntExist() {
-        this.provider.removeTable("a");
-    }
 
 }

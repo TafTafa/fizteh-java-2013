@@ -19,8 +19,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         Table dataBase = new FileTable("db", System.getProperty("fizteh.db.dir") + "/db.dat");
-        StateWrap<State> state = new StateWrap<State>(new State(null, dataBase));
-        Shell<State> shell = new Shell<State>(state);
+        StateWrap<NewState> state = new StateWrap<NewState>(new NewState(null, dataBase));
+        Shell<NewState> shell = new Shell<NewState>(state);
 
         Command<State> putCommand = new PutCommand();
         Command<State> getCommand = new GetCommand();

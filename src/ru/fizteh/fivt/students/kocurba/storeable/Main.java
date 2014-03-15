@@ -1,20 +1,23 @@
 package ru.fizteh.fivt.students.kocurba.storeable;
 
-import ru.fizteh.fivt.storage.strings.TableProviderFactory;
+import ru.fizteh.fivt.storage.structured.TableProviderFactory;
 import ru.fizteh.fivt.students.kocurba.JUnit.NewUseCommand;
 import ru.fizteh.fivt.students.kocurba.filemap.command.*;
+
+
 import ru.fizteh.fivt.students.kocurba.multifilehashmap.command.CreateCommand;
 import ru.fizteh.fivt.students.kocurba.multifilehashmap.command.DropCommand;
 import ru.fizteh.fivt.students.kocurba.shell.Shell;
 import ru.fizteh.fivt.students.kocurba.shell.StateWrap;
 import ru.fizteh.fivt.students.kocurba.shell.command.Command;
-import ru.fizteh.fivt.students.kocurba.storage.strings.FileTableProviderFactory;
+
+import java.io.IOException;
 
 public class Main {
 
     public static void main(String[] args)  {
 
-        TableProviderFactory tableProviderFactory = new FileTableProviderFactory();
+        TableProviderFactory tableProviderFactory = new StoreableTableProviderFactory();
         try {
 
 
@@ -46,6 +49,8 @@ public class Main {
                 shell.interactiveMode(commands);
             }
         } catch (IllegalArgumentException e) {
+            System.exit(1);
+        } catch (IOException e) {
             System.exit(1);
         }
         System.exit(0);
