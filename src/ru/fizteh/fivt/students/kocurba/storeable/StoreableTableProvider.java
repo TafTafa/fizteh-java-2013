@@ -60,13 +60,14 @@ public class StoreableTableProvider implements TableProvider {
         return currentTable;
     }
 
-    private void checkName(String name) {
-        if (name.matches("[" + '"' + "'\\/:/*/?/</>/|/.\\\\]+") || (name == null) || name.trim().length() == 0) {
-            throw new IllegalArgumentException("Bad name!");
+    private void checkName(final String name) {
+        if ((name == null) || name.trim().length() == 0) {
+            throw new IllegalArgumentException("Cannot create table! Wrong name!");
         }
 
-        if (name.contains(File.separator) || name.contains(".")) {
-            throw new IllegalArgumentException("Bad name");
+        if (name.matches("[" + '"' + "'\\/:/*/?/</>/|/.\\\\]+") || name.contains(File.separator)
+                || name.contains(".")) {
+            throw new RuntimeException("Wrong symbols in name!");
         }
     }
 
