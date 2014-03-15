@@ -51,7 +51,7 @@ public class StoreableTableProvider implements TableProvider {
             deleteDirectory(fullName);
 
         } else {
-            throw new IllegalStateException("Table doesn't exist");
+            throw new IllegalStateException(name + " doesn't exist");
         }
 
     }
