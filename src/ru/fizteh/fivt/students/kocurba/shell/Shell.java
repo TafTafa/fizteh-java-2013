@@ -20,19 +20,21 @@ public class Shell<T> {
         System.out.print("$ ");
 
         String command = inputScanner.nextLine();
-        try {
-            while (true) {
+
+        while (true) {
+            try {
                 command = command.trim();
                 String[] commandArgs = command.split("\\s+");
                 executor.execute(state, commandArgs);
                 System.out.print("$ ");
                 command = inputScanner.nextLine();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            } finally {
+                System.out.print("$ ");
             }
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        } finally {
-            inputScanner.close();
         }
+
     }
 
     public void batchMode(String[] args, Command<T>[] com) {
