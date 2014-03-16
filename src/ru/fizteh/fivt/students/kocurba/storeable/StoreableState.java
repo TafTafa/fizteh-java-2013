@@ -7,73 +7,101 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
 
 
 public class StoreableState {
     public Map<String, String> state;
 
-    private HashMap<String, String> diff = new HashMap<String, String>();
+    private ThreadLocal<HashMap<String, String>> diff = new ThreadLocal<HashMap<String, String>>() {
+        @Override
+        public HashMap<String, String> initialValue() {
+            return new HashMap<String, String>();
+        }
+    };
 
-    private HashSet<String> deleted = new HashSet<String>();
-
+    private ThreadLocal<HashSet<String>> deleted = new ThreadLocal<HashSet<String>>() {
+        @Override
+        public HashSet<String> initialValue() {
+            return new HashSet<String>();
+        }
+    };
+    private Lock readLock;
+    private Lock writeLock;
     public StoreableState(StoreableTable table) {
         state = new HashMap<>();
+        readLock = table.readLock;
+        writeLock = table.writeLock;
     }
 
     public String put(String key, String value) {
         String result = null;
 
-        if (diff.containsKey(key)) {
-            result = diff.get(key);
+        if (diff.get().containsKey(key)) {
+            result = diff.get().get(key);
         } else {
-            if (state.containsKey(key)) {
-                result = state.get(key);
+            readLock.lock();
+            try {
+                if (state.containsKey(key)) {
+                    result = state.get(key);
+                }
+            } finally {
+                readLock.unlock();
             }
         }
 
-        if (deleted.contains(key)) {
-            deleted.remove(key);
+        if (deleted.get().contains(key)) {
+            deleted.get().remove(key);
             result = null;
         }
 
-        diff.put(key, value);
+        diff.get().put(key, value);
 
         return result;
     }
 
     public String get(String key) {
-        if (deleted.contains(key)) {
+        if (deleted.get().contains(key)) {
             return null;
         }
 
-        if (diff.containsKey(key)) {
-            return diff.get(key);
+        if (diff.get().containsKey(key)) {
+            return diff.get().get(key);
         }
 
-
-        if (state.containsKey(key)) {
-            return state.get(key);
+        readLock.lock();
+        try {
+            if (state.containsKey(key)) {
+                return state.get(key);
+            }
+        } finally {
+            readLock.unlock();
         }
 
         return null;
     }
 
     public String remove(String key) {
-        if (deleted.contains(key)) {
+        if (deleted.get().contains(key)) {
             return null;
         }
         String result = null;
 
-        if (diff.containsKey(key)) {
-            result = diff.get(key);
-            diff.remove(key);
-            deleted.add(key);
+        if (diff.get().containsKey(key)) {
+            result = diff.get().get(key);
+            diff.get().remove(key);
+            deleted.get().add(key);
             return result;
         }
 
-        if (state.containsKey(key)) {
-            result = state.get(key);
-            deleted.add(key);
+        readLock.lock();
+        try {
+            if (state.containsKey(key)) {
+                result = state.get(key);
+                deleted.get().add(key);
+            }
+        } finally {
+            readLock.unlock();
         }
 
         return result;
@@ -82,26 +110,26 @@ public class StoreableState {
     public void commit() {
         deletedSame();
 
-        if (diff.size() == 0 && deleted.size() == 0) {
+        if (diff.get().size() == 0 && deleted.get().size() == 0) {
             return;
         }
 
-        for (Map.Entry<String, String> node : diff.entrySet()) {
+        for (Map.Entry<String, String> node : diff.get().entrySet()) {
             state.put(node.getKey(), node.getValue());
         }
 
-        for (String key : deleted) {
+        for (String key : deleted.get()) {
             state.remove(key);
         }
 
 
-        diff.clear();
-        deleted.clear();
+        diff.get().clear();
+        deleted.get().clear();
     }
 
     public void rollback() {
-        diff.clear();
-        deleted.clear();
+        diff.get().clear();
+        deleted.get().clear();
     }
 
     public void print(File input) {
@@ -124,43 +152,53 @@ public class StoreableState {
     }
 
     public int size() {
-        deletedSame();
-        int result = diff.size() + state.size() - deleted.size();
-        for (String key : diff.keySet()) {
-            if (state.containsKey(key)) {
-                --result;
+        readLock.lock();
+        try {
+            deletedSame();
+            int result = diff.get().size() + state.size() - deleted.get().size();
+            for (String key : diff.get().keySet()) {
+                if (state.containsKey(key)) {
+                    --result;
+                }
             }
+            return result;
+        } finally {
+            readLock.unlock();
         }
-        return result;
     }
 
     void deletedSame() {
         Set<String> newDeleted = new HashSet<>();
-        newDeleted.addAll(deleted);
+        newDeleted.addAll(deleted.get());
 
         for (String key : state.keySet()) {
-            if (state.get(key).equals(diff.get(key))) {
-                diff.remove(key);
+            if (state.get(key).equals(diff.get().get(key))) {
+                diff.get().remove(key);
             }
             if (newDeleted.contains(key)) {
                 newDeleted.remove(key);
             }
         }
 
-        for (String key : deleted) {
-            if (diff.containsKey(key)) {
-                diff.remove(key);
+        for (String key : deleted.get()) {
+            if (diff.get().containsKey(key)) {
+                diff.get().remove(key);
             }
         }
 
         for (String key : newDeleted) {
-            deleted.remove(key);
+            deleted.get().remove(key);
         }
     }
 
     public int getNumbersOfChanges() {
-        deletedSame();
-        return diff.size() + deleted.size();
+        readLock.lock();
+        try {
+            deletedSame();
+            return diff.get().size() + deleted.get().size();
+        } finally {
+            readLock.unlock();
+        }
     }
 
     public void read(File input, int ndir, int nfile) {

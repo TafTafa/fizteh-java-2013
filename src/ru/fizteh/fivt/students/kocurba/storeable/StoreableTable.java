@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 public class StoreableTable  implements Table {
@@ -15,6 +17,10 @@ public class StoreableTable  implements Table {
     private String tableName = null;
     private List<Class<?>> types;
     private StoreableTableProvider provider;
+    private ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
+    public Lock readLock = readWriteLock.readLock();
+    public Lock writeLock = readWriteLock.writeLock();
+
 
     public StoreableTable(String tableName, StoreableTableProvider provider, List<Class<?>> types) throws IOException {
         state = new StoreableState[256];
@@ -71,9 +77,14 @@ public class StoreableTable  implements Table {
     @Override
     public int commit() {
         int ans = 0;
-        for (int i = 0; i < 256; ++i) {
-            ans += state[i].getNumbersOfChanges();
-            state[i].commit();
+        writeLock.lock();
+        try {
+            for (int i = 0; i < 256; ++i) {
+                ans += state[i].getNumbersOfChanges();
+                state[i].commit();
+            }
+        } finally {
+            writeLock.unlock();
         }
 
         return ans;

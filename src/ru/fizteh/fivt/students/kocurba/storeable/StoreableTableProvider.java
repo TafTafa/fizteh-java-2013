@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 public class StoreableTableProvider implements TableProvider {
@@ -20,6 +22,9 @@ public class StoreableTableProvider implements TableProvider {
     private String currentTable = null;
     private String tableDir;
     private Map<String, StoreableTable> allTables = new HashMap<>();
+    private ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
+    private Lock readLock = readWriteLock.readLock();
+    private Lock writeLock = readWriteLock.writeLock();
 
 
     public StoreableTableProvider(String directory) {
@@ -47,11 +52,15 @@ public class StoreableTableProvider implements TableProvider {
     public void removeTable(String name) throws IOException {
         checkName(name);
         if (isExists(name)) {
-            String fullName = tableDir + File.separator + name;
-            deleteDirectory(fullName);
-
+            writeLock.lock();
+            try {
+                String fullName = tableDir + File.separator + name;
+                deleteDirectory(fullName);
+            } finally {
+                writeLock.unlock();
+            }
         } else {
-            throw new IllegalStateException(name + " not exists");
+            throw new IllegalStateException("Table doesn't exist");
         }
 
     }
@@ -82,17 +91,23 @@ public class StoreableTableProvider implements TableProvider {
 
         File file = new File(fullName);
 
-        if (file.exists()) {
+
+
+        writeLock.lock();
+        try {
+            if (file.exists()) {
                 return null;
+            }
+
+            if (!file.mkdir()) {
+                throw new IllegalArgumentException("Can't create a table");
+            }
+
+            allTables.put(name, new StoreableTable(fullName, this, columnTypes));
+            return allTables.get(name);
+        } finally {
+            writeLock.unlock();
         }
-
-        if (!file.mkdir()) {
-            throw new IllegalArgumentException("Can't create a table");
-        }
-
-        allTables.put(name, new StoreableTable(fullName, this, columnTypes));
-        return allTables.get(name);
-
     }
 
     @Override
@@ -122,7 +137,12 @@ public class StoreableTableProvider implements TableProvider {
 
         StoreableTable dataBase = allTables.get(name);
 
-        dataBase.read();
+        readLock.lock();
+        try {
+            dataBase.read();
+        } finally {
+            readLock.unlock();
+        }
 
         return dataBase;
     }
