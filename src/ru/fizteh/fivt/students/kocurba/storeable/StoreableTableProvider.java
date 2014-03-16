@@ -60,7 +60,7 @@ public class StoreableTableProvider implements TableProvider {
                 writeLock.unlock();
             }
         } else {
-            throw new IllegalStateException("Table doesn't exist");
+            throw new IllegalStateException(name + " not exists");
         }
 
     }
